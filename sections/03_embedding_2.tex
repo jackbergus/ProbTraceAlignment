@@ -296,14 +296,14 @@ When $\hat{\epsilon}$ and $\hat{\epsilon}'$ are affected by numerical cancelatio
 	
 	
 	\midrule
-	$\const{a}$  &  $0.2500$ \\
-	$\const{aa}$  &  $0.1428$  \\
-	$\const{aaa}$  & $0.0714$ \\
-	$\const{ca}$  &   $0.0500$\\
-	$\const{cb}$  & $0.0428$ \\
-	$\const{aaaa}$  &  $0.0357$ \\
-	$\const{caa}$  &  $0.0292$ \\
-	$\const{caaa}$  &   $0.0145$ \\
+	$\const{\color{blue}a}$  &  $0.2500$ \\
+	$\const{\color{red}aa}$  &  $0.1428$  \\
+	$\const{\color{red}aaa}$  & $0.0714$ \\
+	$\const{\color{blue}ca}$  &   $0.0500$\\
+	$\const{\color{blue}cb}$  & $0.0428$ \\
+	$\const{\color{red}aaaa}$  &  $0.0357$ \\
+	$\const{\color{blue}caa}$  &  $0.0292$ \\
+	$\const{\color{blue}caaa}$  &   $0.0145$ \\
 	\bottomrule
 \end{tabular}\quad	\begin{tabular}{l|c}
 	\toprule
@@ -313,14 +313,14 @@ When $\hat{\epsilon}$ and $\hat{\epsilon}'$ are affected by numerical cancelatio
 
 	
 	\midrule
-	$\const{a}$  & $8.16\cdot 10^{-21}$ \\
-	$\const{ca}$  &   $1.89\cdot 10^{-24}$\\
-	$\const{cb}$  &   $7.64\cdot 10^{-25}$\\
-	$\const{caa}$  &$1.14\cdot 10^{-40}$\\
-	$\const{caaa}$  &  $9.84\cdot 10^{-41}$\\
-	$\const{aa}$  &  $9.28\cdot 10^{-41}$ \\
-	$\const{aaaa}$  & $8.44\cdot 10^{-41}$\\
-	$\const{aaa}$  &  $8.72\cdot 10^{-41}$\\
+	$\const{\color{blue}a}$  & $8.16\cdot 10^{-21}$ \\
+	$\const{\color{blue}ca}$  &   $1.89\cdot 10^{-24}$\\
+	$\const{\color{blue}cb}$  &   $7.64\cdot 10^{-25}$\\
+	$\const{\color{blue}caa}$  &$1.14\cdot 10^{-40}$\\
+	$\const{\color{blue}caaa}$  &  $9.84\cdot 10^{-41}$\\
+	$\const{\color{red}aa}$  &  $9.28\cdot 10^{-41}$ \\
+	$\const{\color{red}aaaa}$  & $8.44\cdot 10^{-41}$\\
+	$\const{\color{red}aaa}$  &  $8.72\cdot 10^{-41}$\\
 	\bottomrule
 \end{tabular}}
 \end{table}
@@ -329,7 +329,9 @@ When $\hat{\epsilon}$ and $\hat{\epsilon}'$ are affected by numerical cancelatio
 
 
 \begin{example}%\small \label{ex:11}
-	The dot products $k_{\gorgembed}(\logtrace,\nonlogtrace)=\braket{\gorgembed(\overline{G}_\logtrace),\;\gorgembed(\overline{G}_{\nonlogtrace})}$ with sub-embedding $\nu^1$ and $\epsilon^1$, for each trace $\nonlogtrace\in\WCal{0}{4}_{|\sigma'|\leq 4}$, are represented in Table \ref{tab:rank3}, where the optimal ranking $\goldenrank$ is also showed. $k_{\gorgembed}$ approximates the optimal ranking as it tends to rank the transition graphs $\closed{G}_\nonlogtrace$ (generated from $\overline{G}$ via projection) similarly to the $\net$-traces over $\mathcal{R}$.
+	The dot products $k_{\gorgembed}(\logtrace,\nonlogtrace)=\braket{\gorgembed(\overline{G}_\logtrace),\;\gorgembed(\overline{G}_{\nonlogtrace})}$ with sub-embedding $\nu^1$ and $\epsilon^1$, for each trace $\nonlogtrace\in\WCal{0}{4}_{|\sigma'|\leq 4}$, are represented in Table \ref{tab:rank3}, where the optimal ranking $\goldenrank$ is also showed. $k_{\gorgembed}$ approximates the optimal ranking as it tends to rank the transition graphs $\closed{G}_\nonlogtrace$ (generated from $\overline{G}$ via projection) similarly to the $\net$-traces over $\mathcal{R}$. 
+	
+	In the same table, the ranking similarities shared between the two different ranking strategies are highlighted in blue, while the most evident ranking discrepancies are marked in red. In our experiment section, we are going to numerically quantify the similarity between these two strategies by adopting the Spearman correlation index \cite{BergamiBM20}.
 \end{example}
 
 
