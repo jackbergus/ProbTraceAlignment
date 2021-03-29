@@ -29,7 +29,7 @@ we can retrieve the neighborhood of $x$ in $\mathcal{X}$ of size $k$ by pre-orde
 
 \vspace{+0.2cm}
 \noindent
-\textbf{Optimal-Ranking Trace Aligner.}\label{subsec:eta}
+\textbf{1) Optimal-Ranking Trace Aligner.}\label{subsec:eta}
 %One way to probabilistically align traces is to 
 By reusing existing trace aligners  \cite{DBLP:conf/edoc/AdriansyahDA11,LeoniM17} providing an alignment cost  $d(\logtrace,\nonlogtrace)$ between model and log traces as the Levenshtein distance and
 %, i.e., the {minimum} cost for aligning one of the two traces with respect to the other when all the possible moves have cost equal to 1.\footnote{This is slightly different from the Levenshtein distance from the literature since here the replacement is obtained as a concatenation of a deletion and an addition.}
@@ -47,18 +47,18 @@ a normalized similarity score $s_d(\logtrace,\nonlogtrace):=\frac{1}{d(\logtrace
 	
 \vspace{+0.2cm}	
 \noindent
-\textbf{Approximate-Ranking Trace Embedder.}\label{subsec:ate}
+\textbf{2) Approximate-Ranking Trace Embedder.}\label{subsec:ate}
 Ranking optimality comes at the sub-optimal cost of a brute-force recomputation of $\goldenrank$ for each novel trace $\logtrace$ to align.
 %\footnote{By embedding  all the \unravelled\ model traces via $\phi_{\logtrace}(\nonlogtrace)=\Big(\frac{1}{\probskip{\nonlogtrace}\sqrt{\probskip{\nonlogtrace}^2+s_d^2(\logtrace,\nonlogtrace)}},\frac{1}{s_d(\logtrace,\nonlogtrace)\sqrt{\probskip{\nonlogtrace}^2+s_d^2(\logtrace,\nonlogtrace)}}\Big)$ over a specific $\logtrace$, by representing  $\logtrace$ as $(0,0)$, and by using the Euclidean Distance as a distance, we ensure that all the neighbors of $(0,0)$ will represent the top-$k$ best alignments for $\logtrace$.}. %This is not optimal for $k$NN-based techniques, as this entails the  redefinition of the multidimensional search space $\mathcal{X}$ for each new alignment $\logtrace$. The ``recomputation cost'' could be completely avoided by providing an embedding strategy $\gorgembed$ that is independent of the to-be-aligned trace $\logtrace$.
-Since each embedding $\phi$ entails an associated similarity metric $k_\phi$ (\S\ref{subsec:katk}), %and hence an associated
+Since each embedding $\phi$ entails an associated similarity metric $k_\phi$, %and hence an associated
 %distance $d_{k_\phi}$ (Equation \ref{eq:dofk}), 
 we can compute the embeddings for all the \unravelled\ traces
 before performing the top-$k$ search ensuring that they are independent of the trace to align, thus avoiding the brute-force cost. This computational gain comes with a loss in precision %, as the generation of precise embeddings for graph data with loops is an NP-Complete (thus intractable) problem
- \cite{GartnerFW03} and, in its approximated version, is not able to accurately represent the data using low-dimensional vectors \cite{Seshadhri5631}. So, our proposed embedding (that we indicate with $\gorgembed$) is weakly-ideal (\S\ref{subsec:katk} and \cite{Gartner03}).
+ \cite{GartnerFW03} and, in its approximated version, is not able to accurately represent the data using low-dimensional vectors \cite{Seshadhri5631}. So, our proposed embedding (that we indicate with $\gorgembed$) is weakly-ideal, i.e., inherently distinct traces will always have zero ranking.
 
 {To obtain $\gorgembed$, we adapt the embedding strategy} $\trembed$ from \cite{LodhiSSCW02} {by addressing some short\-comings that this strategy presents:}
 \begin{alphalist}
- \item it does not perform weakly-ideally, so we cannot numerically assess if two embeddings represent equivalent traces (Example \ref{ex:wheredotiszero});
+ \item it does not perform weakly-ideally, so we cannot numerically assess if two embeddings represent equivalent traces;
  \item it does not characterize $\tau$-moves, so the probabilities of the initial and final $\tau$-moves are not preserved;
  \item it is affected by numerical errors from finite arithmetics: longer traces $\nonlogtrace$ generated from skewed probability distributions $\expN.\Lambda^i$ suffer from greater truncation errors, as smaller $\lambda^i$ components for bigger $i<|\nonlogtrace|$ will be ignored, preventing a complete numerical vector characterization of  $\nonlogtrace$ in practice.
 \end{alphalist}
@@ -175,7 +175,7 @@ Here, ${\max\arg}_{\nonlogtrace\in \WCal{\pmin}{n}, G_\nonlogtrace\in\TBf{p}{n}(
 	\end{tabular}}
 \end{table}
 %
-For sub-embeddings $\epsilon$ and $\nu$, {in our experiment section}, we choose two possible interchangeable definitions ($x=1$ and $x=2$) shown in Table \ref{tab:embedstrat}: here, $l$ is the path length (reported in Table \ref{tab:proj}), and $c$ for $\nu^1$ is a normalization factor such that $\sum_{\const{a}\in\mathcal{A}}\nu^1_\const{a}(P)=1$. While $\nu^2$ implies to completely ignore the label frequency contribution, $\epsilon^2$ is the direct implementation of $\trembed$ from \S\ref{subsec:katk}, and $\epsilon^1$ and $\epsilon^2$ only differ from the normalization perspective. %In Example \ref{ex:cmpexample}, we will see that the given definition of $\epsilon^1$ provides a better approximation than the edge embedding $\epsilon^2$.
+For sub-embeddings $\epsilon$ and $\nu$, {in our experiment section}, we choose two possible interchangeable definitions ($x=1$ and $x=2$) shown in Table \ref{tab:embedstrat}: here, $l$ is the path length (reported in Table \ref{tab:proj}), and $c$ for $\nu^1$ is a normalization factor such that $\sum_{\const{a}\in\mathcal{A}}\nu^1_\const{a}(P)=1$. While $\nu^2$ implies to completely ignore the label frequency contribution, $\epsilon^2$ is the direct implementation of $\trembed$ from \cite{LodhiSSCW02}, and $\epsilon^1$ and $\epsilon^2$ only differ from the normalization perspective. %In Example \ref{ex:cmpexample}, we will see that the given definition of $\epsilon^1$ provides a better approximation than the edge embedding $\epsilon^2$.
 %
 $t_f\in [0,1]\subseteq\mathbb{R}^+_{0}$ and $\lambda\in [0,1]\subset\mathbb{R}^+_{0}$ are tuning parameters that can be
 inferred from the available data \cite{DriessensRG06}. The latter describes the previously mentioned decay factor, while $t_f$
@@ -461,7 +461,7 @@ This representation is independent of the representation associated with a trace
 \textbf{Properties.}\label{subsub:prop} Due to the lack of space, we omit the proofs for the considerations that follow. The kernel $k_{\gorgembed}$ associated to $\gorgembed$ is {a function of the distance  $\|\hat{\epsilon}-\hat{\epsilon}'\|_2^2$ and $\|\hat{\nu}-\hat{\nu}'\|_2^2$ for traces $\logtrace$ and ${\nonlogtrace}$:}
 When $\hat{\epsilon}$ and $\hat{\epsilon}'$ are affected by numerical cancelation due to truncation error (i.e., $\norm{\hat{\epsilon}-\hat{\epsilon}'}{2}^2\to 0$), the $\nu$ strategy intervenes as a backup ranking strategy. The first term of the sum does not affect the ranking, as it reduces to a constant factor.
 %
-We can prove that when two traces $\logtrace$ and ${\nonlogtrace}$ are equivalent (correspond to the same sequence of labels and have the same probability), the kernel computation reduces to $\omega\omega'$. When both weights are $1$, the kernel returns $1$. We call this condition \textit{weak equality} because we cannot possibly prove that when the kernel is equal to $\omega\omega'$ then the two traces we are comparing are equivalent (there could be equal embeddings coming from non-equivalent traces). As shown in \S\ref{ex:wheredotiszero}, traces having neither $2$-grams nor transition labels in common have kernel $0$ and vice versa (\textit{strong dissimilarity}). Since weak equality and strong similarity hold, the embedding performs \textit{weakly-ideally}.
+We can prove that when two traces $\logtrace$ and ${\nonlogtrace}$ are equivalent (correspond to the same sequence of labels and have the same probability), the kernel computation reduces to $\omega\omega'$. When both weights are $1$, the kernel returns $1$. We call this condition \textit{weak equality} because we cannot possibly prove that when the kernel is equal to $\omega\omega'$ then the two traces we are comparing are equivalent (there could be equal embeddings coming from non-equivalent traces). Traces having neither $2$-grams nor transition labels in common have kernel $0$ and vice versa (\textit{strong dissimilarity}). Since weak equality and strong similarity hold, the embedding performs \textit{weakly-ideally}.
 
 %\begin{figure}[!t]
 %	\vspace*{-0.5cm}
