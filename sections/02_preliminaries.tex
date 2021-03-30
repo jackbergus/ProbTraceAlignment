@@ -1,12 +1,12 @@
 \section{Probabilistic Trace Alignment Pipeline}
 %We now describe the proposed technique for computing probabilistic trace alignments. 
-As sketched in \figurename~\ref{fig:pipe}, our approach takes as input
+Our approach (\figurename~\ref{fig:pipe}) takes as input
 \begin{inparaenum}[\it (i)]
 	\item a reference model represented as an Stochastic Workflow Nets $\net$ or an equivalent Transition Graph $G$,
 	\item a minimum, positive probability threshold $\pmin \in (0,1]$
 	\item a trace $\trace$ of interest,
 \end{inparaenum}
-and returns a ranking over all the $\net$-traces having a probability greater than or equal to $\pmin$, based on a combined consideration of their probability values (probabilistic component) and their distance to $\trace$ (alignment component).
+and returns a ranking over all the $\net$-traces having a probability greater than or equal to $\pmin$, based on a combined consideration of their probability values and their distance to $\trace$. First, we discuss input formats for \textit{(i)}.
 
 
 %\section{Modeling Probabilistic Dynamic Systems}
@@ -19,7 +19,7 @@ and returns a ranking over all the $\net$-traces having a probability greater th
 \end{figure}
 %\subsection{Input}
 %\subsection{Stochastic Workflow Nets}\label{subsec:spn}
-\textbf{{Input: Stochastic Workflow Nets}.} Petri Nets and Generalized Stochastic Petri Nets are well-established formalisms for modelling processes;  they are customary formal basis \cite{DBLP:conf/bpm/LeemansSA19,DBLP:conf/icpm/PolyvyanyyK19,DBLP:journals/tosem/PolyvyanyySWCM20} to represent processes \cite{MarsanCB84,RoggeSoltiAW13}. Due to the lack of space, we refer to \cite{spdwe} for the usual notation over Petri Nets. We restrict Generalized Stochastic Petri Nets to an interesting class of stochastic Petri nets with no times transitions, namely \textsc{untimed Stochastic Workflow Nets}. We assume to have a set $\alphabet = \tasks \cup \set{\tau}$ of labels, where labels in $\tasks$ indicate process tasks, whereas $\tau$ indicates an invisible execution step ($\tau$-transition). A \emph{trace} is a finite sequence of labels from $\tasks$.
+\textbf{{Format: \texttt{Petri\_PNML}}.} Petri Nets and Generalized Stochastic Petri Nets are well-established formalisms \cite{DBLP:conf/bpm/LeemansSA19,DBLP:conf/icpm/PolyvyanyyK19,DBLP:journals/tosem/PolyvyanyySWCM20} for modelling processes \cite{MarsanCB84,RoggeSoltiAW13} represented in the Petri Net Markup Language, supported by our tool. Due to the lack of space, we refer to \cite{spdwe} for the usual notation over Petri Nets. We restrict our interest to an interesting class of $1$-\textit{bounded} stochastic Petri nets with no timed transitions, namely \textsc{untimed Stochastic Workflow Nets} denoted as $N$. We now sketch the properties of the SWN accepted in PNML format: we consider two customary markings: the \emph{input} (resp.~\emph{output}) marking $m_{in}$ (resp.~$m_{out}$) assigning a single token to the input (resp.~output) place, and no token elsewhere. We assume to have a set $\alphabet = \tasks \cup \set{\tau}$ of labels, where labels in $\tasks$ indicate process tasks, whereas $\tau$ indicates an invisible execution step ($\tau$-transition). A \emph{trace} is a finite sequence of labels from $\tasks$.
 %\begin{definition} An \emph{untimed Stochastic Workflow Net (\uswn)}
 %	is a tuple $\net = (P,T,F,\ell,W)$ where:
 %	\begin{inparaenum}[\itshape (i)]
@@ -30,13 +30,17 @@ and returns a ranking over all the $\net$-traces having a probability greater th
 %	\end{inparaenum}
 %\end{definition}
 %Given an \uswn $\net$, we use dot notation to extract its constitutive components (e.g., $\net.P$ denotes its places). \emph{The same dot notation will be used for the other structures introduced in the paper}. We also use $\net.in$ and $\net.out$ to respectively denote the input and output place of $\net$.
-The current state of execution is captured using a marking, i.e., a multiset of places $P$ indicating how many tokens populate each place.
+The current state of execution is captured by a marking, i.e., a multiset of places $P$ indicating how many tokens populate each place.
 %As pointed out above, \emph{we always assume, as customary in BPM, that the input \uswn is \underline{bounded}}, that is, in every state the number of tokens associated to each place cannot exceed a maximum, fixed threshold.
-The notions of transition enablement and firing are also the standard ones, since they do not depend on the weight function \cite{MarsanCB84}: %, which provides the basis for capturing the stochastic behavior of the net. 
-%We use the following notation: given a marking $\marking$ over \uswn $\net$,  $\enaset{\marking}{\net}$ is the set of enabled transitions in $\marking$; given transition $t \in \enaset{\marking}{\net}$, we write $\fire{\marking}{t}{\marking'}{\net}$ to capture the fact that, within $\net$, firing $t$ in $\marking$ results in the new marking $\marking'$. A \emph{firing sequence of $\net$ starting from marking $\marking_0$} is a sequence $t_1\cdots t_n$ of transitions from $\net.T$ so that, for every $i \in \set{1,\ldots,n}$, we have that $\fire{\marking_{i-1}}{t_i}{\marking_{i}}{\net}$. We say that the firing sequence results in $\marking_{n}$.
+The notions of transition enablement and firing are also the standard ones  \cite{MarsanCB84}: %, which provides the basis for capturing the stochastic behavior of the net. 
+%We use the following notation: given a marking $\marking$ over \uswn $\net$,  $\enaset{\marking}{\net}$ is the set of enabled transitions in $\marking$; given transition $t \in \enaset{\marking}{\net}$, we write $\fire{\marking}{t}{\marking'}{\net}$ to capture the fact that, with, firing $t$ in $\marking$ results in the new marking $\marking'$. A \emph{firing sequence starting from marking $\marking_0$} is a sequence $t_1\cdots t_n$ of transitions from $\net.T$ so that, for every $i \in \set{1,\ldots,n}$, we have that $\fire{\marking_{i-1}}{t_i}{\marking_{i}}{\net}$. We say that the firing sequence results in $\marking_{n}$.
 %
-given a marking $\marking$ of $N$ and an enabled transition $t \in T_e$, the \emph{firing probability} of $t$ in $\marking$ is $\probt{t}{\marking}{\net} = \frac{W(t)}{\sum_{t'\in T_e}W(t')}$. As required, the probabilities associated to all enabled transitions in a marking always add up to 1.
-We consider two customary markings: the \emph{input} (resp.~\emph{output}) marking $m_{in}^\net$ (resp.~$m_{out}^\net$) that assigns a single token to the input (resp.~output) place $\net.in$ (resp.~$\net.out$) of $\net$, and no token elsewhere. A \emph{valid sequence} $\seq = t_1\cdots t_n$ of $\net$ is a firing sequence of $\net$ starting from $m_{in}^\net$ and resulting in $m_{out}^\net$. The probability $\prob{\seq}{\net}$ of a valid sequence is the product of the probabilities associated to each transition: $\prob{\seq}{\net} = \prod_{i \in \set{1,\ldots,n}}\prob{t_i}{\marking_{i-1}}{\net}$.  A sequence of labels $\run = \alpha_1 \cdots \alpha_n$ from $\alphabet$ is a \emph{run} of $\net$ if there exists a valid underlying sequence $\seq = t_1\cdots t_n$ of $\net$  such that, for every $i \in \set{1,\ldots,n}$, we have $\net.\ell(t_i) = \alpha_i$. Run $\run$ may have different underlying valid sequences in $\net$, which we collectively refer to as $\seqs{\run}{\net}$. A trace $\trace$ is a \emph{model trace} of $\net$ (or $\net$-trace for short) if there exists an underlying run $\run$ of $\net$ corresponding to $\trace$ once all $\tau$ are removed. There may be multiple runs underlying an $\net$-trace $\trace$, and we collectively refer to them as $\runs{\trace}{\net}$.  $\traces{\net}$ is the (possibly infinite) set of $\net$-traces. For a trace $\trace$ of $\net$, its probability $\prob{\trace}{\net}$ is then obtained by collecting all its underlying runs, in turn collecting all their underlying valid sequences, and summing up their respective probabilities: $\prob{\trace}{\net} = \sum_{\run \in \runs{\trace}{\net}} \sum_{\seq \in \seqs{\run}{\net}} \prob{\seq}{\net}$. This corresponds to the intuition that, to observe $\trace$, one can equivalently pick any of its underlying valid sequences. Notably, if a trace is not an $\net$-trace (i.e., it does not conform with $\net$), then its probability is 0.
+given a marking $\marking$ %of $N$ 
+and an enabled transition $t \in T_e$, the \emph{firing probability} of $t$ in $\marking$ is $\probt{t}{\marking}{\net} = \frac{W(t)}{\sum_{t'\in T_e}W(t')}$. %As required, 
+The probabilities associated to all enabled transitions in a marking always add up to 1.
+ A \emph{valid sequence} $\seq = t_1\cdots t_n$ is a firing sequence starting from $m_{in}^\net$ and resulting in $m_{out}$. The probability $\prob{\seq}{\net}$ of a valid sequence is the product of the probabilities associated to each transition: $\prob{\seq}{\net} = \prod_{i \in \set{1,\ldots,n}}\prob{t_i}{\marking_{i-1},\net}$.  A sequence of labels $\run = \alpha_1 \cdots \alpha_n$ from $\alphabet$ is a \emph{run} if there exists a valid underlying sequence $\seq = t_1\cdots t_n$  having $\alpha_i$ as a label for each $t_i\in \seq$. Run $\run$ may have different underlying valid sequences in $\seqs{\run}{\net}$. A trace $\trace$ is a \emph{model trace} (or $\net$-trace for short) if there exists an underlying run $\run$ corresponding to $\trace$ once all $\tau$ are removed. There may be multiple runs $\runs{\trace}{\net}$ underlying an $\net$-trace $\trace$.  $\traces{\net}$ is the (possibly infinite) set of $\net$-traces. For a trace $\trace$ of $\net$, its probability $\prob{\trace}{\net}$ is then obtained by collecting all its underlying runs, in turn collecting all their underlying valid sequences, and summing up their respective probabilities: $\prob{\trace}{\net} = \sum_{\run \in \runs{\trace}{\net}} \sum_{\seq \in \seqs{\run}{\net}} \prob{\seq}{\net}$. This corresponds to the intuition that, to observe $\trace$, one can equivalently pick any of its underlying valid sequences. Notably, if a trace is not an $\net$-trace (i.e., it does not conform with $\net$), then its probability is 0.
+ 
+ These structural properties makes them suitable for loading BPMN nets as well: when the \texttt{Petri\_BPMN} is choosen, either the firing weight estimator is constant by default (\texttt{W\_CONSTANT}), or we can choose one from \cite{spdwe}. 
 \begin{example} %\small
 \label{ex:net}
 \figurename~\ref{fig:spn} shows an example of an \uswn with input place $p_1$ and output place $p_7$. One run of the net is $\const{\tau c \tau a a \tau}$, which corresponds to trace $\const{caa}$. Overall, the net supports infinitely many finite traces of the form (represented using regular expressions):
@@ -52,10 +56,10 @@ We consider two customary markings: the \emph{input} (resp.~\emph{output}) marki
 % For convenience, when needed, we represent an $\net$-trace as a pair $\tup{\trace,\prob{\trace}{\net}}$, where the probability assigned to $\trace$ by $\net$ is retained.
 
 
-\textbf{Input: Transition Graphs.} %\label{subsec:ppn}
+\textbf{Format: \texttt{StochasticMatrix}.} %\label{subsec:ppn}
 The graph and trace embedding techniques %that we will use as the basis for computing probabilistic alignments 
 cannot be directly defined over reachability graphs, as they %. In fact, these techniques 
-rely on probabilistic transition graphs \cite{GartnerFW03}. Such graphs have transition probabilities associated to the edges, while nodes have labels in $\Sigma$, 
+rely on probabilistic \textsc{Transition Graphs} \cite{GartnerFW03}. Such graphs have transition probabilities associated to the edges, while nodes have labels in $\Sigma$, 
 and suitably represented via transition matrices. Each node is mapped by a matrix $L$ to a single label, as the same label may be used for multiple nodes, while a matrix $R$ represents a probability distribution over the next nodes to be picked upon executing a transition.
 %where edges are only labeled by probabilities, whereas labels are attached to nodes. In addition, towards readily enabling efficient algorithmic techniques, such graphs are compactly defined using transition matrixes. We therefore take inspiration from \cite{GartnerFW03} and introduce the so-called \emph{probabilistic transition graphs}, which we will later use to encode \uswn{s} via their reachability graphs.
 Due to the lack of space, we refer to \cite{GartnerFW03} for the standard notation for \textsc{probabilistic Transition Graphs}:
@@ -93,12 +97,12 @@ an edge from node $\ind{i}$ to node $\ind{j}$ is only shown if the transition pr
 
 %$\npath{\ind{i}}{\ind{j}}$
 
-By mirroring to definitions of \uswn{s} taking into account that now labels are on nodes, a \emph{valid sequence} of $\tg$ is a sequence $\ind{i}_0\ldots\ind{i}_n$ of nodes in $\tg.V$ that leads from the initial to the accepting node by only traversing transitions with nonzero probability:
-\begin{inparaenum}[\it (i)]
-	\item $\ind{i}_0 = \tg.s$;
-	\item $\ind{i}_n = \tg.e$;
-	\item if the sequence contains at least two nodes, each two consecutive nodes are connected by a positive transition probability, i.e., for every $j \in \set{1,\ldots,n}$ we have $[R]_{\ind{i}_{j-1}\ind{i}_{j}} > 0$.
-\end{inparaenum}
+By mirroring to definitions of \uswn{s} taking into account that now labels are on nodes, a \emph{valid sequence} of $\tg$ is a sequence $\ind{i}_0\ldots\ind{i}_n$ of nodes in $\tg.V$ that leads from the initial to the accepting node by only traversing transitions with nonzero probability. 
+%\begin{inparaenum}[\it (i)]
+%	\item $\ind{i}_0 = \tg.s$;
+%	\item $\ind{i}_n = \tg.e$;
+%	\item if the sequence contains at least two nodes, each two consecutive nodes are connected by a positive transition probability, i.e., for every $j \in \set{1,\ldots,n}$ we have $[R]_{\ind{i}_{j-1}\ind{i}_{j}} > 0$.
+%\end{inparaenum}
 Runs and model traces of transition graphs are then defined as in \uswn{s}, and we employ the same notation to indicate the runs underlying a model trace, and the valid sequences underlying a run. The computation of probabilities for runs and traces is hence defined equivalently.
 
 %We close this section by introducing how some  matrix operations defined in the literature \cite{GartnerFW03} are applied to matrixes $L$ and $R$ of $\tg$, towards tackling interesting probability computations. These will be instrumental later on in the paper. Given two nodes $\ind{i},\ind{j} \in \tg.V$, $[R^n]_{\ind{i}\ind{j}}$ returns the probability of having a path in $\tg$ that connects $\ind{i}$ to $\ind{j}$ and has length $n$. Given two labels $\alpha,\beta \in \alphabet$, with $[LR^n\transp{L}]_{\alpha\beta}/[L\transp{L}]_{\alpha\alpha}$, we obtain the probability that, starting in any node labeled by $\alpha$, we reach a node labeled by $\beta$ through  $n$ consecutive steps in $\tg$. As a shortcut notation, we call the result $[\tg.\Lambda^n]_{\alpha\beta}$. Since there may be different nodes labeled by $\alpha$, we need to normalize the resulting probabilities. This is obtained with the division by $L\transp{L}$, which does so by assuming a uniform distribution when picking from which specific $\alpha$-labeled node one wants to start. Notice that these calculations need to be refined so as to consider proper runs and  traces. This will be done in Section~\ref{subsec:as}. %\todo{Rimandare alla sezione giusta}
@@ -141,16 +145,17 @@ Runs and model traces of transition graphs are then defined as in \uswn{s}, and 
 %\subsection{Input Transformation}
 \medskip
 
-\textbf{Transforming SWN$\to$TG.} If input is provided as a SWN,  we represent all transition firings of an \uswn, together with their probabilities, in a reachability graph by interpreting concurrency by interleaving.
-\begin{definition}
-The \emph{Reachability Graph} $\rg{\net}$ of \uswn \net is a triple $(M,E,P)$ where:
-\begin{compactitem}[$\bullet$]
-\item $M$ is the set of all reachable markings from $\marking_0^\net$ (including $\marking_0^\net$ itself).
-\item $E \subseteq M \times \alphabet \times M$ is a $\alphabet$-\emph{labeled transition relation} induced by $\net$, that is, for $\marking,\marking' \in M$, we have edge $(\marking,a,\marking') \in E$ if and only if there exists transition $t$ in $\net$ with label $\ell(t) = a$ and such that $\fire{\marking}{t}{\marking'}{\net}$.
-\item $P:E \rightarrow [0,1]$ is the \emph{transition probability} function assigning to each transition $(\marking,a,\marking') \in E$ its corresponding probability, obtained from the firing probability of the \uswn transition(s) that lead from $\marking$ to $\marking'$ and are labeled by $a$: $P(\marking,a,\marking') = \sum_{t_i \in \enaset{\marking}{\net} \text{ s.t.~} \net.\ell(t) = a \text{ and } \fire{\marking}{t}{\marking'}{\net}} \prob{t}{\marking}{\net}$.
-\end{compactitem}
-\end{definition}
-We now need to consider that, in a given state, distinct net transitions with the same label produce the same consequent state, thus becoming indistinguishable from the trace perspective as they collaps into a single edge of the reachability graph. So, we accumulate all their firing probabilities into a single edge value. 
+\textbf{Transforming SWN$\to$TG.} If input is provided as a SWN $N$,  we internally represent all transition firings of an \uswn, together with their probabilities, in a reachability graph $RG(N)$ (\figurename~\ref{fig:rg}) by interpreting concurrency by interleaving. In such, the transition probability function $P$ assigns to each transition its corresponding probability computed from the firing probability of $N$. Alternatively, Reachability Graphs can be directly provided via the \texttt{PetriMatrix} format. Due to the lack of space, we skip the customary definition of $RG(N)$.
+%\begin{definition}
+%The \emph{Reachability Graph} $\rg{\net}$ of \uswn \net is a triple $(M,E,P)$ where:
+%\begin{compactitem}[$\bullet$]
+%\item $M$ is the set of all reachable markings from $\marking_0^\net$ (including $\marking_0^\net$ itself).
+%\item $E \subseteq M \times \alphabet \times M$ is a $\alphabet$-\emph{labeled transition relation} induced by $\net$, that is, for $\marking,\marking' \in M$, we have edge $(\marking,a,\marking') \in E$ if and only if there exists transition $t$  with label $\ell(t) = a$ and such that $\fire{\marking}{t}{\marking'}{\net}$.
+%\item $P:E \rightarrow [0,1]$ is the \emph{transition probability} function assigning to each transition $(\marking,a,\marking') \in E$ its corresponding probability, obtained from the firing probability of the \uswn transition(s) that lead from $\marking$ to $\marking'$ and are labeled by $a$: $P(\marking,a,\marking') = \sum_{t_i \in \enaset{\marking}{\net} \text{ s.t.~} \net.\ell(t) = a \text{ and } \fire{\marking}{t}{\marking'}{\net}} \prob{t}{\marking}{\net}$.
+%\end{compactitem}
+%\end{definition}
+%We now need to consider that, 
+For a given state, distinct net transitions with the same label might produce the same consequent state, thus becoming indistinguishable from the trace perspective as they collaps into a single edge of the reachability graph. So, we accumulate all their firing probabilities into a single edge value. 
 %Next, we handle %need to cope
 %%Notice that, in the definition, 
 %%we have to account for the possible case where, in a given state, 
@@ -160,11 +165,12 @@ We now need to consider that, in a given state, distinct net transitions with th
 %collapsing into a single edge of the reachability graph, %. This is why, in this case, 
 %we accumulate all their firing probabilities into a single value.
 %
-In the remainder of the paper, given an \uswn $\net$, we always assume that it satisfies two structural assumptions that are natural in the BPM setting:
-\begin{compactitem}
-\item $\net$ is \emph{bounded}, that is, every marking in $\rg{\net}$ assigns at most a pre-defined number of tokens to each place;
-\item $\rg{\net}$ does not contain loops where all edges are labeled with $\tau$.
-\end{compactitem}
+In the remainder of the paper, given an \uswn $\net$, we always assume that, in addition to its boundedness, it the following structural assumptions that are natural in the BPM setting:
+%\begin{compactitem}
+%\item $\net$ is \emph{bounded}, that is, every marking in $\rg{\net}$ assigns at most a pre-defined number of tokens to each place;
+%\item 
+$\rg{\net}$ does not contain loops where all edges are labeled with $\tau$.
+%\end{compactitem}
 %The first assumption indicates that a case of the process does not generate unboundedly many parallel threads, and guarantees in turn that the reachability graph contains finitely many states. The second assumption naturally corresponds to how $\tau$-transitions are used when modeling business processes, where they are essential in representing gateways (such as exclusive and parallel splits/joins), cascaded gateways without tasks in between, and skippable tasks.  In all these cases, 
 Multiple $\tau$-transitions may be used, but never creating completely invisible loops. Under this assumption, % $\net$ enjoys a very interesting property:
  there are only boundedly many valid sequences that can produce a given  trace $\trace$. Hence, the probability of $\trace$ can be computed by:
@@ -173,7 +179,7 @@ Multiple $\tau$-transitions may be used, but never creating completely invisible
 \item calculating the probability of each such sequence;
 \item summing up all the so-obtained probabilities.
 \end{inparaenum}
-\figurename~\ref{fig:rg} shows an example of a reachability graph.
+%\figurename~\ref{fig:rg} shows an example of a reachability graph.
 \begin{example} %\small
   \label{ex:trace}
 Consider the \uswn \net of Example~\ref{ex:net}. Considering trace $\const{caa}$, it is easy to see that it has only one underlying run, namely $\const{\tau c \tau a a \tau}$, in turn produced by a single underlying valid sequence, and that
@@ -238,6 +244,6 @@ The transformation relies on well-known automata-based techniques for removing $
 All $\tau$ transitions can still be removed thanks to the working hypothesis done for \uswn{s}, as no loops can contain only $\tau$ transitions. %The transition graph in \figurename~\ref{fig:orig} results in that of \figurename~\ref{fig:closed}.
 \medskip
 
-\textbf{Unfolding.} Next, we unfold the previously closed graph to collect the model traces having probability greater or equal than $\pmin$. %The $\hidden$-closed transition graph $\closed{\tg_{\rg{\net}}}$ is \unravelled, so as to collect all the model traces that have a probability of at least $\pmin$. To do so, we rely on a key property that $\closed{\tg_{\rg{\net}}}$ inherits from the fact that it results from an \uswn. 
-Since an \uswn has a Workflow net as underlying control-flow structure and given that TG inherits the results from SWNs, no loop can be executed without strictly decreasing the resulting probability. This means that all valid sequences with a resulting probability of at least $\pmin$ can be enumerated and returned in a set. The so-obtained sequences are then combined by merging those that produce the same trace, summing up their probabilities, thus obtaining the set of all the traces having a probability greater than or equal to $\pmin$, $\ptraces{\closed{\tg_{\rg{\net}}}}{\pmin}$. The closure operation also implies that the notion of model trace collapses with the one of run modulo removing the initial and the final $\tau$ labels attached to the initial and accepting nodes.
+\textbf{Unfolding.} Next, we unfold the previously closed graph to collect the model traces having probability greater or equal than $\pmin$, denoted in the tool as \textsf{Minimum trace probability}. %The $\hidden$-closed transition graph $\closed{\tg_{\rg{\net}}}$ is \unravelled, so as to collect all the model traces that have a probability of at least $\pmin$. To do so, we rely on a key property that $\closed{\tg_{\rg{\net}}}$ inherits from the fact that it results from an \uswn. 
+Since an \uswn has a Workflow net as underlying control-flow structure and given that TG inherits the results from SWNs, no loop can be executed without strictly decreasing the resulting probability. This means that all valid sequences with a resulting probability of at least $\pmin$ can be enumerated and returned in a set. The so-obtained sequences are then combined by merging those that produce the same trace, summing up their probabilities, thus obtaining the set of all the traces having a probability greater than or equal to $\pmin$, $\ptraces{\closed{\tg_{\rg{\net}}}}{\pmin}$. The closure operation also implies that the notion of model trace collapses with the one of run modulo removing the initial and the final $\tau$ labels attached to the initial and accepting nodes. In addition to that, traces might be also pre-filtered by \textsf{Maximum complete trace length}. 
 \medskip
