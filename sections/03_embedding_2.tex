@@ -1,10 +1,10 @@
 % !TeX root=../main.tex
 %\vspace{-0.5cm}
 %As mentioned in the introduction, 
-When aligning a log trace with an \uswn, the retrieval of the best model trace maximizing the combined provision of minimum trace alignment cost and maximum model trace probability might not suffice.
+When aligning a log trace with an \uswn, the retrieval of the best model trace maximizing the combined provision of minimum trace alignment cost and maximum model trace probability might not suffice. 
 %An alignment of a trace with an \uswn could be represented by the best model trace maximizing the combined provision of minimum trace alignment cost and maximum model trace probability. However, in some cases, the user could prefer to identify an alignment with a lower cost even if based on a less probable model trace, while, in other cases, the user could favor a model trace with a higher probability at the expense of a higher alignment cost.
 Therefore, we need to return the best $k$ alignments among all the distinct \unravelled\ model traces in $\ptraces{\net}{\pmin}=\ptraces{\closed{\tg_{\rg{\net}}}}{\pmin}$. In the database community, this problem is usually tackled via $k$-Nearest Neighbors ($k$NN) that refers to finding the $k$ nearest data points to a \textit{query} $x$ from a set $\mathcal{X}$ of \textit{data points} via a distance function $d_k$ defined over $\mathcal{X}\cup\{x\}$. {In particular, by exploiting ad-hoc data structures, such as VP-Trees and KD-Trees, %VP-Trees \cite{Fu2000} \cite{Maneewongvatana99}, and M-Trees \cite{Ciaccia},
-we can retrieve the neighborhood of $x$ in $\mathcal{X}$ of size $k$ by pre-ordering (\textit{indexing}) $\mathcal{X}$ via $d_k$ and starting the search from the top-$1$ alignment.
+we can retrieve the neighborhood of $x$ in $\mathcal{X}$ of size $k$ by pre-ordering (\textit{indexing}) $\mathcal{X}$ via $d_k$ and starting the search from the top-$1$ alignment. Our tool benchmarks both strategies and gives results in CSV.
 
 %Usually, $x$ and $\mathcal{X}$ are represented as numerical vectors via an embedding $\phi$. {By exploiting ad-hoc data structures such as Vp-Trees \cite{Fu2000}, Kd-Trees \cite{Maneewongvatana99}, and M-Trees \cite{Ciaccia}, we can retrieve the neighborhood of $x$ in $\mathcal{X}$ of size $k$  by pre-ordering (\textit{indexing}) $\mathcal{X}$  via $d_k$. Thus, we do not need to analyze the entire space, but just start the search from the top-$1$ alignment. We prefer embeddings $\phi$ for $\mathcal{X}$ that are independent of the query of choice $x$, as it would not require to constantly change the numeric vector representation for $\mathcal{X}$.
 
@@ -48,32 +48,32 @@ a normalized similarity score $s_d(\logtrace,\nonlogtrace):=\frac{1}{d(\logtrace
 \vspace{+0.2cm}	
 \noindent
 \textbf{2) Approximate-Ranking Trace Embedder.}\label{subsec:ate}
-Ranking optimality comes at the sub-optimal cost of a brute-force recomputation of $\goldenrank$ for each novel trace $\logtrace$ to align.
+%Ranking optimality comes at the sub-optimal cost of a brute-force recomputation of $\goldenrank$ for each novel trace $\logtrace$ to align.
 %\footnote{By embedding  all the \unravelled\ model traces via $\phi_{\logtrace}(\nonlogtrace)=\Big(\frac{1}{\probskip{\nonlogtrace}\sqrt{\probskip{\nonlogtrace}^2+s_d^2(\logtrace,\nonlogtrace)}},\frac{1}{s_d(\logtrace,\nonlogtrace)\sqrt{\probskip{\nonlogtrace}^2+s_d^2(\logtrace,\nonlogtrace)}}\Big)$ over a specific $\logtrace$, by representing  $\logtrace$ as $(0,0)$, and by using the Euclidean Distance as a distance, we ensure that all the neighbors of $(0,0)$ will represent the top-$k$ best alignments for $\logtrace$.}. %This is not optimal for $k$NN-based techniques, as this entails the  redefinition of the multidimensional search space $\mathcal{X}$ for each new alignment $\logtrace$. The ``recomputation cost'' could be completely avoided by providing an embedding strategy $\gorgembed$ that is independent of the to-be-aligned trace $\logtrace$.
 Since each embedding $\phi$ entails an associated similarity metric $k_\phi$, %and hence an associated
 %distance $d_{k_\phi}$ (Equation \ref{eq:dofk}), 
 we can compute the embeddings for all the \unravelled\ traces
 before performing the top-$k$ search ensuring that they are independent of the trace to align, thus avoiding the brute-force cost. This computational gain comes with a loss in precision %, as the generation of precise embeddings for graph data with loops is an NP-Complete (thus intractable) problem
- \cite{GartnerFW03} and, in its approximated version, is not able to accurately represent the data using low-dimensional vectors \cite{Seshadhri5631}. So, our proposed embedding (that we indicate with $\gorgembed$) is weakly-ideal, i.e., inherently distinct traces will always have zero ranking.
-
-{To obtain $\gorgembed$, we adapt the embedding strategy} $\trembed$ from \cite{LodhiSSCW02} {by addressing some short\-comings that this strategy presents:}
-\begin{alphalist}
- \item it does not perform weakly-ideally, so we cannot numerically assess if two embeddings represent equivalent traces;
- \item it does not characterize $\tau$-moves, so the probabilities of the initial and final $\tau$-moves are not preserved;
- \item it is affected by numerical errors from finite arithmetics: longer traces $\nonlogtrace$ generated from skewed probability distributions $\expN.\Lambda^i$ suffer from greater truncation errors, as smaller $\lambda^i$ components for bigger $i<|\nonlogtrace|$ will be ignored, preventing a complete numerical vector characterization of  $\nonlogtrace$ in practice.
-\end{alphalist}
+ \cite{GartnerFW03} and, in its approximated version, is not able to accurately represent the data using low-dimensional vectors \cite{Seshadhri5631}. %So, our proposed embedding (that we indicate with $\gorgembed$) is weakly-ideal.
+{To obtain our proposed embedding $\gorgembed$, we adapt the embedding strategy} $\trembed$ from \cite{LodhiSSCW02} {by addressing some short\-comings: %that this strategy presents:}
+%\begin{alphalist}
+% \item it does not perform weakly-ideally, so we cannot numerically assess if two embeddings represent equivalent traces;
+% \item it does not characterize $\tau$-moves, so the probabilities of the initial and final $\tau$-moves are not preserved;
+% \item it is affected by numerical errors from finite arithmetics: longer traces $\nonlogtrace$ generated from skewed probability distributions $\expN.\Lambda^i$ suffer from greater truncation errors, as smaller $\lambda^i$ components for bigger $i<|\nonlogtrace|$ will be ignored, preventing a complete numerical vector characterization of  $\nonlogtrace$ in practice.
+%\end{alphalist}
 %
-{To overcome these shortcomings we} \begin{alphalist} \item propose a weakly-ideal embedding, which also \item exploits an
+%{To overcome these shortcomings we} 
+we
+\begin{alphalist} \item propose a weakly-ideal embedding \cite{Gartner03} which, differently from current literature, \item exploits an
 $\omega$ factor for preserving probabilities from and to $\tau$ transitions. We also \item mitigate the
 numerical truncation errors induced by trace length and probability distribution skewness through two sub-embedding strategies,
 $\epsilon^x$ and $\nu^x$, where the former descends from $\trembed$ and the latter approximates the trace similarity via label frequencies similarity.
 \end{alphalist}
-
 Since a trace embedding for $\nonlogtrace\in\WCal{\pmin}{n}$ adequately representing the transitions in $\expN.\Lambda$ requires an intermediate $G$ representation, we map each $\nonlogtrace$ to a pair $(\tg_\nonlogtrace,\omega)$}, where \begin{inparaenum}[\it (i)]
 \item $\tg_\nonlogtrace$ is a transition graph containing all nodes and edges leading to the valid sequences in $\expN$ forming a trace $\nonlogtrace$, where all $\tau$-labelled nodes are removed, while
 \item the graph weight $\omega$ preserves the weight of the possible initial and final edges that were removed due to the former requirement.
 \end{inparaenum}
-The formal definition of such operation is omitted due to the lack of space.
+%The formal definition of such operation is omitted due to the lack of space.
 %Please observe that the first requirement is mandatory, as present string embedding strategy do not cope with silent characters $\tau$.
 %
 %
@@ -100,6 +100,7 @@ The formal definition of such operation is omitted due to the lack of space.
 %\end{definition}
 %	
 \begin{table}[!t]
+	\setlength{\textfloatsep}{-1pt}
 	\caption{Projections of $\expN$ over $\net$-traces of length $4$.}\label{tab:proj}
 	\centering
 	\resizebox{.3\textwidth}{!}{\begin{tabular}{>{\centering\arraybackslash} m{1cm}| >{\centering\arraybackslash} m{4cm} >{\centering\arraybackslash} m{1cm} >{\centering\arraybackslash} m{1cm} }
@@ -467,12 +468,12 @@ examples, we choose $t_f=0.0001$ and $\lambda=0.07$.
 %\begin{example}\label{ex:cmpexample}
 %	Let us compare the ranking results by replacing in $\gorgembed$ the edge embedding $\epsilon^1$ with $\epsilon^2$. If we re-run the computations performed in  Example \ref{ex:11}, we obtain   Table \ref{tab:compLit}:  $\epsilon^1$ provides longer approximated subsequences if compared to $\epsilon^2$. Both embedding proposals tend to favor sequences containing one single node or one single subtrace due to the normalization of both  the edge and the nodes' distribution, but $\epsilon^2$ seems to be less influenced than $\epsilon^1$ in the change of the edge distribution. Therefore, $\epsilon^1$ proposal is to be preferred to $\epsilon^2$.
 %\end{example}
-
-\noindent
-\textbf{Properties.}\label{subsub:prop} Due to the lack of space, we omit the proofs for the considerations that follow. The kernel $k_{\gorgembed}$ associated to $\gorgembed$ is {a function of the distance  $\|\hat{\epsilon}-\hat{\epsilon}'\|_2^2$ and $\|\hat{\nu}-\hat{\nu}'\|_2^2$ for traces $\logtrace$ and ${\nonlogtrace}$:}
-When $\hat{\epsilon}$ and $\hat{\epsilon}'$ are affected by numerical cancelation due to truncation error (i.e., $\norm{\hat{\epsilon}-\hat{\epsilon}'}{2}^2\to 0$), the $\nu$ strategy intervenes as a backup ranking strategy. The first term of the sum does not affect the ranking, as it reduces to a constant factor.
-%
-We can prove that when two traces $\logtrace$ and ${\nonlogtrace}$ are equivalent (correspond to the same sequence of labels and have the same probability), the kernel computation reduces to $\omega\omega'$. When both weights are $1$, the kernel returns $1$. We call this condition \textit{weak equality} because we cannot possibly prove that when the kernel is equal to $\omega\omega'$ then equivalent embeddings come from equivalent traces. Traces having neither $2$-grams nor transition labels in common have kernel $0$ and vice versa (\textit{strong dissimilarity}). Since weak equality and strong similarity hold, we perform \textit{weakly-ideally}.
+We omit the proof of relevant properties due to the lack of space, under which it follows that our approach performs weakly-ideally.
+%\noindent
+%\textbf{Properties.}\label{subsub:prop} Due to the lack of space, we omit the proofs for the considerations that follow. The kernel $k_{\gorgembed}$ associated to $\gorgembed$ is {a function of the distance  $\|\hat{\epsilon}-\hat{\epsilon}'\|_2^2$ and $\|\hat{\nu}-\hat{\nu}'\|_2^2$ for traces $\logtrace$ and ${\nonlogtrace}$:}
+%When $\hat{\epsilon}$ and $\hat{\epsilon}'$ are affected by numerical cancelation due to truncation error (i.e., $\norm{\hat{\epsilon}-\hat{\epsilon}'}{2}^2\to 0$), the $\nu$ strategy intervenes as a backup ranking strategy. The first term of the sum does not affect the ranking, as it reduces to a constant factor.
+%%
+%We can prove that when two traces $\logtrace$ and ${\nonlogtrace}$ are equivalent (correspond to the same sequence of labels and have the same probability), the kernel computation reduces to $\omega\omega'$. When both weights are $1$, the kernel returns $1$. We call this condition \textit{weak equality} because we cannot possibly prove that when the kernel is equal to $\omega\omega'$ then equivalent embeddings come from equivalent traces. Traces having neither $2$-grams nor transition labels in common have kernel $0$ and vice versa (\textit{strong dissimilarity}). Since weak equality and strong similarity hold, we perform \textit{weakly-ideally}.
 
 %\begin{figure}[!t]
 %	\vspace*{-0.5cm}

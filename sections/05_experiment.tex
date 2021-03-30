@@ -60,10 +60,10 @@
 
 We assess our probabilistic trace alignment approach via the Sepsis Cases event log.%
 \footnote{{\small \texttt{\tiny https://data.4tu.nl/articles/dataset/Sepsis\_Cases\_-\_Event\_Log/12707639}}} 
-The dataset is partitioned into a training set with the ``\textit{happy traces}''  lasting at most the average trace duration in the 
-log ($\leq 2.3\cdot 10^{7}$ ms), and a test set. The training set to generate a known trace representation using the approach
-from \cite{RoggeSoltiAW13}, or from \cite{AugustoCDRP19}, which was then converted into a Petri net \cite{PPNFromLog} jointly
-with firing weight estimators from \cite{spdwe} (\tablename~\ref{tab:dataset}). 
+The dataset is partitioned into a training set with the ``\textit{happy traces}''  %lasting at most the average trace duration in the 
+%log ($\leq 2.3\cdot 10^{7}$ ms), 
+and a test set. The training set to generate an input reference model using  \cite{RoggeSoltiAW13,AugustoCDRP19}. %, which was then converted into a Petri net \cite{PPNFromLog} jointly
+%with firing weight estimators from \cite{spdwe} (\tablename~\ref{tab:dataset}). 
 We evaluated the benefits of the approximate-ranking strategy over optimal-ranking. First, we measured the level of 
 approximation by noticing a positive correlation between the ranking induced by both Optimal- and Approximate-Ranking Trace 
 Aligner via Spearman Correlation Index \cite{BergamiBM20}. We then benchmarked the proposed $k$NN queries by using 

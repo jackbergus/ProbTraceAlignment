@@ -1,3 +1,15 @@
+\begin{figure}[!t]
+	\centering
+	\includegraphics[width=.45\textwidth]{images/petri_tut.pdf}
+	\caption{Stochastic Workflow Net modeling our use-case scenario.}\label{fig:petri_tut}
+	%\vspace{-0.6cm}
+\end{figure}
+\begin{figure}[!t]
+	\centering\includegraphics[width=.8\textwidth]{images/pipeline}
+	\caption{Proposed pipeline to assess the probabilistic trace alignment.}\label{fig:pipe}
+\end{figure}
+\medskip
+
 \section{Probabilistic Trace Alignment Pipeline}
 %We now describe the proposed technique for computing probabilistic trace alignments. 
 Our approach (\figurename~\ref{fig:pipe}) takes as input
@@ -13,13 +25,11 @@ and returns a ranking over all the $\net$-traces having a probability greater th
 %\label{sec:models}
 %In this section, we introduce the different models and techniques that will constitute the basis for representing and computing probabilistic trace alignments.
 
-\begin{figure}[!t]
-	\centering\includegraphics[width=.8\textwidth]{images/pipeline}
-	\caption{Proposed pipeline to assess the probabilistic trace alignment.}\label{fig:pipe}
-\end{figure}
+
 %\subsection{Input}
 %\subsection{Stochastic Workflow Nets}\label{subsec:spn}
-\textbf{{Format: \texttt{Petri\_PNML}}.} Petri Nets and Generalized Stochastic Petri Nets are well-established formalisms \cite{DBLP:conf/bpm/LeemansSA19,DBLP:conf/icpm/PolyvyanyyK19,DBLP:journals/tosem/PolyvyanyySWCM20} for modelling processes \cite{MarsanCB84,RoggeSoltiAW13} represented in the Petri Net Markup Language, supported by our tool. Due to the lack of space, we refer to \cite{spdwe} for the usual notation over Petri Nets. We restrict our interest to an interesting class of $1$-\textit{bounded} stochastic Petri nets with no timed transitions, namely \textsc{untimed Stochastic Workflow Nets} denoted as $N$. We now sketch the properties of the SWN accepted in PNML format: we consider two customary markings: the \emph{input} (resp.~\emph{output}) marking $m_{in}$ (resp.~$m_{out}$) assigning a single token to the input (resp.~output) place, and no token elsewhere. We assume to have a set $\alphabet = \tasks \cup \set{\tau}$ of labels, where labels in $\tasks$ indicate process tasks, whereas $\tau$ indicates an invisible execution step ($\tau$-transition). A \emph{trace} is a finite sequence of labels from $\tasks$.
+
+\textbf{{Format: \texttt{Petri\_PNML}}.} Petri Nets and Generalized Stochastic Petri Nets are well-established formalisms \cite{DBLP:journals/tosem/PolyvyanyySWCM20} for modelling processes \cite{RoggeSoltiAW13} represented in the Petri Net Markup Language, supported by our tool. Due to the lack of space, we refer to \cite{spdwe} for the usual notation over Petri Nets. We restrict our interest to an interesting class of $1$-\textit{bounded} stochastic Petri nets with no timed transitions, namely \textsc{untimed Stochastic Workflow Nets} denoted as $N$. We now sketch the properties of the SWN accepted in PNML format: we consider two customary markings: the \emph{input} (resp.~\emph{output}) marking $m_{in}$ (resp.~$m_{out}$) assigning a single token to the input (resp.~output) place, and no token elsewhere. We assume to have a set $\alphabet = \tasks \cup \set{\tau}$ of labels, where labels in $\tasks$ indicate process tasks, whereas $\tau$ indicates an invisible execution step ($\tau$-transition). A \emph{trace} is a finite sequence of labels from $\tasks$.
 %\begin{definition} An \emph{untimed Stochastic Workflow Net (\uswn)}
 %	is a tuple $\net = (P,T,F,\ell,W)$ where:
 %	\begin{inparaenum}[\itshape (i)]
@@ -94,16 +104,14 @@ an edge from node $\ind{i}$ to node $\ind{j}$ is only shown if the transition pr
 %A \emph{trace} is a finite sequence of nodes that can be turned into a valid sequence by introducing in the sequence an arbitrary number of $\tau$ labels (so as to account for hidden transitions in the graph).
 %\end{definition}
 %From the definition, it is clear that every valid path can be straightforwardly converted into a corresponding trace by removing all $\tau$ labels from the sequence.
-
 %$\npath{\ind{i}}{\ind{j}}$
-
-By mirroring to definitions of \uswn{s} taking into account that now labels are on nodes, a \emph{valid sequence} of $\tg$ is a sequence $\ind{i}_0\ldots\ind{i}_n$ of nodes in $\tg.V$ that leads from the initial to the accepting node by only traversing transitions with nonzero probability. 
+%By mirroring to definitions of \uswn{s} taking into account that now labels are on nodes, a \emph{valid sequence} of $\tg$ is a sequence $\ind{i}_0\ldots\ind{i}_n$ of nodes in $\tg.V$ that leads from the initial to the accepting node by only traversing transitions with nonzero probability. 
 %\begin{inparaenum}[\it (i)]
 %	\item $\ind{i}_0 = \tg.s$;
 %	\item $\ind{i}_n = \tg.e$;
 %	\item if the sequence contains at least two nodes, each two consecutive nodes are connected by a positive transition probability, i.e., for every $j \in \set{1,\ldots,n}$ we have $[R]_{\ind{i}_{j-1}\ind{i}_{j}} > 0$.
 %\end{inparaenum}
-Runs and model traces of transition graphs are then defined as in \uswn{s}, and we employ the same notation to indicate the runs underlying a model trace, and the valid sequences underlying a run. The computation of probabilities for runs and traces is hence defined equivalently.
+Valid sequences, runs and model traces as well as their probability are defined similarly from \uswn{s}, and we employ the same notation.
 
 %We close this section by introducing how some  matrix operations defined in the literature \cite{GartnerFW03} are applied to matrixes $L$ and $R$ of $\tg$, towards tackling interesting probability computations. These will be instrumental later on in the paper. Given two nodes $\ind{i},\ind{j} \in \tg.V$, $[R^n]_{\ind{i}\ind{j}}$ returns the probability of having a path in $\tg$ that connects $\ind{i}$ to $\ind{j}$ and has length $n$. Given two labels $\alpha,\beta \in \alphabet$, with $[LR^n\transp{L}]_{\alpha\beta}/[L\transp{L}]_{\alpha\alpha}$, we obtain the probability that, starting in any node labeled by $\alpha$, we reach a node labeled by $\beta$ through  $n$ consecutive steps in $\tg$. As a shortcut notation, we call the result $[\tg.\Lambda^n]_{\alpha\beta}$. Since there may be different nodes labeled by $\alpha$, we need to normalize the resulting probabilities. This is obtained with the division by $L\transp{L}$, which does so by assuming a uniform distribution when picking from which specific $\alpha$-labeled node one wants to start. Notice that these calculations need to be refined so as to consider proper runs and  traces. This will be done in Section~\ref{subsec:as}. %\todo{Rimandare alla sezione giusta}
 

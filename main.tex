@@ -31,6 +31,9 @@
 \input{neue_macros}
 
 \input{macros-style}
+\usepackage{etoolbox}
+\BeforeBeginEnvironment{figure}{\vskip-2ex}
+\AfterEndEnvironment{figure}{\vskip-1ex}
 
 \begin{document}
 
