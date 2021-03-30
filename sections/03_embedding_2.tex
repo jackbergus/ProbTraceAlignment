@@ -62,24 +62,33 @@ before performing the top-$k$ search ensuring that they are independent of the t
  \item it does not characterize $\tau$-moves, so the probabilities of the initial and final $\tau$-moves are not preserved;
  \item it is affected by numerical errors from finite arithmetics: longer traces $\nonlogtrace$ generated from skewed probability distributions $\expN.\Lambda^i$ suffer from greater truncation errors, as smaller $\lambda^i$ components for bigger $i<|\nonlogtrace|$ will be ignored, preventing a complete numerical vector characterization of  $\nonlogtrace$ in practice.
 \end{alphalist}
-
+%
 {To overcome these shortcomings we} \begin{alphalist} \item propose a weakly-ideal embedding, which also \item exploits an
 $\omega$ factor for preserving probabilities from and to $\tau$ transitions. We also \item mitigate the
 numerical truncation errors induced by trace length and probability distribution skewness through two sub-embedding strategies,
 $\epsilon^x$ and $\nu^x$, where the former descends from $\trembed$ and the latter approximates the trace similarity via label frequencies similarity.
 \end{alphalist}
 
-Since a trace embedding for $\nonlogtrace\in\WCal{\pmin}{n}$ adequately representing the transitions in $\expN.\Lambda$ requires an intermediate $G$ representation, we map each $\nonlogtrace$ to a transition graph $\tg_\nonlogtrace$ as follows:}
-	\begin{definition}[$\closed{G}$ projection over traces]
-		Given a minimum probability thre\-shold $\pmin$ and a $\tau$-closed transition graph $\closed{G}=(V,s,t,L,R)$, for each trace $\nonlogtrace\in\ptraces{\closed{G}}{\pmin}$, the $\closed{G}$ projection over $\nonlogtrace$ is a pair ($\closed{G}_\nonlogtrace,\omega)$, where $\closed{G}_\nonlogtrace$ is a transition graph such that
-\begin{inparaenum}[\it (i)]
-	\item $\closed{G}_\nonlogtrace.V$ contains all distinct nodes generating $\nonlogtrace$ from $\closed{G}$	(i.e., $\bigcup_{\xi\in\runs{\nonlogtrace}{\closed{G}}}\seqs{\xi}{ \closed{G}}$);
-	\item $\closed{G}_\nonlogtrace.s = s$;
-	\item  $\closed{G}_\nonlogtrace.t = t$;
-	\item $\closed{G}_\nonlogtrace.L$ (and $\closed{G}_\nonlogtrace.R$) is the submatrix of $L$ (and $R$) over the columns (and rows) in $\closed{G}_\nonlogtrace.V$, and $\omega \in [0,1]$ is a \emph{graph weight} preserving the transition probabilities from and to $\tau$ nodes and computed as $1-\prod_{\xi\in\runs{\sigma}{\closed{G}},\eta\in\seqs{\xi}{\closed{G}}}\Big(1-(\textit{ifte}([L]_{\tau\eta_1},[R]_{\eta_1\eta_2})$
-	 $\textit{ifte}([L]_{\tau t_n},[R]_{t_{n-1} t_n})\Big)$,
-	where $\textit{ifte}(x,y):=x(y-1)+1$ returns $y$ if $x=1$ and $1$ otherwise. We denote the set of all the $\closed{G}_\nonlogtrace$ as $\TBf{\pmin}{4}(\closed{G})$.
+Since a trace embedding for $\nonlogtrace\in\WCal{\pmin}{n}$ adequately representing the transitions in $\expN.\Lambda$ requires an intermediate $G$ representation, we map each $\nonlogtrace$ to a pair $(\tg_\nonlogtrace,\omega)$}, where \begin{inparaenum}[\it (i)]
+\item $\tg_\nonlogtrace$ is a transition graph containing all nodes and edges leading to the valid sequences in $\expN$ forming a trace $\nonlogtrace$, where all $\tau$-labelled nodes are removed, while
+\item the graph weight $\omega$ preserves the weight of the possible initial and final edges that were removed due to the former requirement.
 \end{inparaenum}
+The formal definition of such operation is omitted due to the lack of space.
+%Please observe that the first requirement is mandatory, as present string embedding strategy do not cope with silent characters $\tau$.
+%
+%
+%
+%
+%	\begin{definition}[$\closed{G}$ projection over traces]
+%		Given a minimum probability thre\-shold $\pmin$ and a $\tau$-closed transition graph $\closed{G}=(V,s,t,L,R)$, for each trace $\nonlogtrace\in\ptraces{\closed{G}}{\pmin}$, the $\closed{G}$ projection over $\nonlogtrace$ is a pair ($\closed{G}_\nonlogtrace,\omega)$, where $\closed{G}_\nonlogtrace$ is a transition graph such that
+%\begin{inparaenum}[\it (i)]
+%	\item $\closed{G}_\nonlogtrace.V$ contains all distinct nodes generating $\nonlogtrace$ from $\closed{G}$	(i.e., $\bigcup_{\xi\in\runs{\nonlogtrace}{\closed{G}}}\seqs{\xi}{ \closed{G}}$);
+%	\item $\closed{G}_\nonlogtrace.s = s$;
+%	\item  $\closed{G}_\nonlogtrace.t = t$;
+%	\item $\closed{G}_\nonlogtrace.L$ (and $\closed{G}_\nonlogtrace.R$) is the submatrix of $L$ (and $R$) over the columns (and rows) in $\closed{G}_\nonlogtrace.V$, and $\omega \in [0,1]$ is a \emph{graph weight} preserving the transition probabilities from and to $\tau$ nodes and computed as $1-\prod_{\xi\in\runs{\sigma}{\closed{G}},\eta\in\seqs{\xi}{\closed{G}}}\Big(1-(\textit{ifte}([L]_{\tau\eta_1},[R]_{\eta_1\eta_2})$
+%	 $\textit{ifte}([L]_{\tau t_n},[R]_{t_{n-1} t_n})\Big)$,
+%	where $\textit{ifte}(x,y):=x(y-1)+1$ returns $y$ if $x=1$ and $1$ otherwise. We denote the set of all the $\closed{G}_\nonlogtrace$ as $\TBf{\pmin}{4}(\closed{G})$.
+%\end{inparaenum}
 %\dots
 %		
 %		\dots we generate a set $\TBf{\pmin}{n}(\closed{G})$ of projected TGs $P$ for each trace in $\WCal{\pmin}{n}(P)$ as follows: for each weighted trace $\braket{\nonlogtrace,\probskip{\nonlogtrace}}\in\WCal{\pmin}{n}(P)$ generated from a path $\pi_\nonlogtrace=s\to n_2\rightsquigarrow n_m\to t$ over $R$, we generate a TG $P_\nonlogtrace=(s',t',L_\nonlogtrace,R_\nonlogtrace,\omega')$, where \begin{inparaenum}[\it (i)]
@@ -88,7 +97,7 @@ Since a trace embedding for $\nonlogtrace\in\WCal{\pmin}{n}$ adequately represen
 %			\item $L_\nonlogtrace$ (and $R_\nonlogtrace$) is the submatrix of $L$ (and $R$) over the non-$\tau$ labeled notes in $\pi_\nonlogtrace$ and the labels from $\nonlogtrace$,
 %			\item $\omega'$ is initialized by $\omega$ and then multiplied by $[R]_{s,n_2}$ (and also $[R]_{n_m,t}$) if $\textit{label}(s)=\tau$ (and  $\textit{label}(t)=\tau$).
 %		\end{inparaenum}
-\end{definition}
+%\end{definition}
 %	
 \begin{table}[!t]
 	\caption{Projections of $\expN$ over $\net$-traces of length $4$.}\label{tab:proj}
@@ -115,7 +124,7 @@ Since a trace embedding for $\nonlogtrace\in\WCal{\pmin}{n}$ adequately represen
 \end{tabular}}
 \vspace{-0.2cm}
 \end{table}
-The graph weight $\omega$ derives from the outgoing edges of the initial node and the ingoing edges of the accepting node when such nodes are labeled as $\tau$. Given that (i) the embedding strategy from \cite{LodhiSSCW02} allows trace embedding only for visible (i.e., non-$\tau$) transitions, and (ii) the trace extraction process discards the $\tau$ information, we use $\omega$ to preserve such information.
+%The graph weight $\omega$ derives from the outgoing edges of the initial node and the ingoing edges of the accepting node when such nodes are labeled as $\tau$. Given that (i) the embedding strategy from \cite{LodhiSSCW02} allows trace embedding only for visible (i.e., non-$\tau$) transitions, and (ii) the trace extraction process discards the $\tau$ information, we use $\omega$ to preserve such information.
 %We call the pair consisting of a transition graph and a graph weight a \emph{weighted transition graph}.
 \begin{example}\label{ex:neue}
 Given the $\tau$-closed transition graph $\closed{\tg_{\rg{\net}}}$ in \figurename~\ref{fig:closed}, we assign the probability values
@@ -129,8 +138,9 @@ Table \ref{tab:proj} shows the projected transition graphs associated to such tr
 for embedding them is displayed (e.g., all the $\tau$-labeled nodes are removed).
 \end{example}
 	
-{Our proposed embedding $\gorgembed$ is computed for each transition graph generated in the former definition. The goal is to use
-$k_{\gorgembed}$ for ranking all the traces generated by \unravelling\ via such graphs. We extend the embedding $\trembed$ from \cite{LodhiSSCW02} by including the traces associated probability, and making the ranking induced by $k_{\gorgembed}$ the inverse of the ranking induced by the
+{Our proposed embedding $\gorgembed$ is computed for each pair $(\tg_\nonlogtrace,\omega)$ generated from each unfolded trace %transition graph generated in the former definition. The goal is to use
+%$k_{\gorgembed}$ for ranking all the traces generated by \unravelling\ via such graphs. 
+We can now extend the embedding $\trembed$ \cite{LodhiSSCW02} by including the traces associated probability, and making the ranking induced by $k_{\gorgembed}$ the inverse of the ranking induced by the
 sum of the following distances: the transition correlations $\epsilon$ and the transition label frequency $\nu$.}
 %\xout{Given that we previously observed that a TGs $\closed{\tg_{\rg{\net}}}$ can be fully characterized (read, similarity) by their associated set of traces $\mathcal{W}_p^n(P)$  and that the trace embedding can be described as an embedding over a TG, we can characterize a TG embedding as a transition matrix embedding. In addition to that, when two Workflow Nets share similar node labelings but no ${\color{green}\alpha}\rightsquigarrow{\color{green}\beta}$ paths for any ${\color{green}\alpha}$ and ${\color{green}\beta}$, we should combine the former embedding with an embedding characterizing the frequency on how the nodes' labels appear in the generated traces.} \ADD
 {We also require that the desired properties of $\gorgembed$ are independent of the characterization of $\epsilon$ over the $2$-grams in $\mathcal{A}^2$ and $\nu$ over the labels in $\mathcal{A}$, which  provide different embedding strategies. } Therefore, our proposed $\gorgembed$ embedding is defined as follows:
@@ -181,7 +191,7 @@ $t_f\in [0,1]\subseteq\mathbb{R}^+_{0}$ and $\lambda\in [0,1]\subset\mathbb{R}^+
 inferred from the available data \cite{DriessensRG06}. The latter describes the previously mentioned decay factor, while $t_f$
 represents the relevance of our embedding representation as the number of edges within $\closed{G}_\nonlogtrace$ increases. In our experiments and
 examples, we choose $t_f=0.0001$ and $\lambda=0.07$.
-This representation is independent of the representation associated with a trace to be aligned. Therefore it does not have to be recomputed at each alignment with a different $\logtrace$.
+%This representation is independent of the representation associated with a trace to be aligned. Therefore it does not have to be recomputed at each alignment with a different $\logtrace$.
 
 
 
@@ -328,7 +338,8 @@ This representation is independent of the representation associated with a trace
 %%\xout{Similar considerations can be also drawn from the}
 %embedding $\gorgembed(\overline{G}_{\logtrace})$ with strategies $\epsilon^1$ and $\nu^1$ %\xout{associated to the trace $\logtrace=\textup{caba}$ (also in Table --):} \ADD
 %{as} in Table \ref{tab:embsitar}: $\const{a}$ is clearly the most frequent label while $\const{b}$ and $\const{c}$ are equiprobable. The $2$-gram $\const{ca}$ appears twice in the trace set and then, it is more frequent than the remaining $2$-grams.
-	The dot products $k_{\gorgembed}(\logtrace,\nonlogtrace)=\braket{\gorgembed(\overline{G}_\logtrace),\;\gorgembed(\overline{G}_{\nonlogtrace})}$ with sub-embedding $\nu^1$ and $\epsilon^1$, for each trace $\nonlogtrace\in\WCal{0}{4}_{|\sigma'|\leq 4}$, are represented in Table \ref{tab:rank3}, where an explicit computation of $\gorgembed(\overline{G}_\logtrace)$ is omitted due to lack of space to the benefit of optimal ranking $\goldenrank$. $k_{\gorgembed}$ approximates the optimal ranking as it tends to rank the transition graphs $\closed{G}_\nonlogtrace$ (generated from $\overline{G}$ via projection) similarly to the $\net$-traces over $\mathcal{R}$. In the same table, the ranking similarities shared between the two different ranking strategies are highlighted in blue, while the most evident ranking discrepancies are marked in red. In our experiment section, we are going to numerically quantify the similarity between these two strategies by adopting the Spearman correlation index \cite{BergamiBM20}.
+	The dot products $k_{\gorgembed}(\logtrace,\nonlogtrace)=\braket{\gorgembed(\overline{G}_\logtrace),\;\gorgembed(\overline{G}_{\nonlogtrace})}$ with sub-embedding $\nu^1$ and $\epsilon^1$, for each trace $\nonlogtrace\in\WCal{0}{4}_{|\sigma'|\leq 4}$, are represented in Table \ref{tab:rank3}.%, where an explicit computation of $\gorgembed(\overline{G}_\logtrace)$ is omitted due to lack of space to the benefit of optimal ranking $\goldenrank$. 
+	$k_{\gorgembed}$ approximates the optimal ranking as it tends to rank the transition graphs $\closed{G}_\nonlogtrace$ (generated from $\overline{G}$ via projection) similarly to the $\net$-traces over $\mathcal{R}$. In the same table, the ranking similarities shared between the two different ranking strategies are highlighted in blue, while the most evident ranking discrepancies are marked in red. %In our experiment section, we are going to numerically quantify the similarity between these two strategies by adopting the Spearman correlation index \cite{BergamiBM20}.
 \end{example}
 
 
