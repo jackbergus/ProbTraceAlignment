@@ -20,7 +20,7 @@
 %(\S\ref{sec:seqZ}), we shift the labels from the edges towards the nodes while preserving the set of probabilistic traces
 %(\S\ref{sec:LSift}) and minimize the graph representation by removing the $\tau$-labeled nodes while preserving the
 %trace probability (\S\ref{sec:clos}).
-The last step takes the so-obtained model traces and ranks them by considering their probabilities and the similarity with the trace $\trace$ of interest. %In \figurename~\ref{fig:pipe}, this is shown as a black-box. %As we describe in detail next, we have implemented this last step in two alternative ways: one computationally demanding but guaranteeing to produce an optimal ranking, the other more efficient but providing approximate ranking without optimality guarantees.
+The last step takes the so-obtained TG-traces and ranks the best $k$ by considering their probabilities and the alignment cost with the trace $\trace$ of interest. %In \figurename~\ref{fig:pipe}, this is shown as a black-box. %As we describe in detail next, we have implemented this last step in two alternative ways: one computationally demanding but guaranteeing to produce an optimal ranking, the other more efficient but providing approximate ranking without optimality guarantees.
 %\todo{Ho tagliato la descrizione che c'era dopo. Al limite la incorporerei nella rispettiva sottosezione.}
 %We later discuss how to rank traces in the exact and approximated scenarios by reducing the alignment process to a k-nearest
 %neighbour problem. While the exact trace alignment requires to perform the alignment process each time a novel trace $\sigma^*$ is

@@ -1,9 +1,10 @@
 % !TeX root=../main.tex
 %\vspace{-0.5cm}
 %As mentioned in the introduction, 
-When aligning a log trace with an \uswn, the retrieval of the best model trace maximizing the combined provision of minimum trace alignment cost and maximum model trace probability might not suffice. 
+%When aligning a log trace with an \uswn, the retrieval of the best model trace maximizing the combined provision of minimum trace alignment cost and maximum model trace probability might not suffice. 
 %An alignment of a trace with an \uswn could be represented by the best model trace maximizing the combined provision of minimum trace alignment cost and maximum model trace probability. However, in some cases, the user could prefer to identify an alignment with a lower cost even if based on a less probable model trace, while, in other cases, the user could favor a model trace with a higher probability at the expense of a higher alignment cost.
-Therefore, we need to return the best $k$ alignments among all the distinct \unravelled\ model traces in $\ptraces{\net}{\pmin}=\ptraces{\closed{\tg_{\rg{\net}}}}{\pmin}$. In the database community, this problem is usually tackled via $k$-Nearest Neighbors ($k$NN) that refers to finding the $k$ nearest data points to a \textit{query} $x$ from a set $\mathcal{X}$ of \textit{data points} via a distance function $d_k$ defined over $\mathcal{X}\cup\{x\}$. {In particular, by exploiting ad-hoc data structures, such as VP-Trees and KD-Trees, %VP-Trees \cite{Fu2000} \cite{Maneewongvatana99}, and M-Trees \cite{Ciaccia},
+%Therefore, we need to return the best $k$ alignments among all the distinct \unravelled\ model traces in $\ptraces{\net}{\pmin}=\ptraces{\closed{\tg_{\rg{\net}}}}{\pmin}$. 
+In the database community, this problem is usually tackled via $k$-Nearest Neighbors ($k$NN) that refers to finding the $k$ nearest data points to a \textit{query} $x$ from a set $\mathcal{X}$ of \textit{data points} via a distance function $d_k$ defined over $\mathcal{X}\cup\{x\}$. {In particular, by exploiting ad-hoc data structures, such as VP-Trees and KD-Trees, %VP-Trees \cite{Fu2000} \cite{Maneewongvatana99}, and M-Trees \cite{Ciaccia},
 we can retrieve the neighborhood of $x$ in $\mathcal{X}$ of size $k$ by pre-ordering (\textit{indexing}) $\mathcal{X}$ via $d_k$ and starting the search from the top-$1$ alignment. Our tool benchmarks both strategies and gives results in CSV.
 
 %Usually, $x$ and $\mathcal{X}$ are represented as numerical vectors via an embedding $\phi$. {By exploiting ad-hoc data structures such as Vp-Trees \cite{Fu2000}, Kd-Trees \cite{Maneewongvatana99}, and M-Trees \cite{Ciaccia}, we can retrieve the neighborhood of $x$ in $\mathcal{X}$ of size $k$  by pre-ordering (\textit{indexing}) $\mathcal{X}$  via $d_k$. Thus, we do not need to analyze the entire space, but just start the search from the top-$1$ alignment. We prefer embeddings $\phi$ for $\mathcal{X}$ that are independent of the query of choice $x$, as it would not require to constantly change the numeric vector representation for $\mathcal{X}$.
@@ -73,6 +74,7 @@ Since a trace embedding for $\nonlogtrace\in\WCal{\pmin}{n}$ adequately represen
 \item $\tg_\nonlogtrace$ is a transition graph containing all nodes and edges leading to the valid sequences in $\expN$ forming a trace $\nonlogtrace$, where all $\tau$-labelled nodes are removed, while
 \item the graph weight $\omega$ preserves the weight of the possible initial and final edges that were removed due to the former requirement.
 \end{inparaenum}
+
 %The formal definition of such operation is omitted due to the lack of space.
 %Please observe that the first requirement is mandatory, as present string embedding strategy do not cope with silent characters $\tau$.
 %
@@ -123,7 +125,7 @@ Since a trace embedding for $\nonlogtrace\in\WCal{\pmin}{n}$ adequately represen
 	$\const{caaa}$ & \includegraphics{images/trace_ca_loop} & $4$ & $\color{violet}\pb\pf$\\
 	\bottomrule
 \end{tabular}}
-\vspace{-0.2cm}
+\vspace{-0.6cm}
 \end{table}
 %The graph weight $\omega$ derives from the outgoing edges of the initial node and the ingoing edges of the accepting node when such nodes are labeled as $\tau$. Given that (i) the embedding strategy from \cite{LodhiSSCW02} allows trace embedding only for visible (i.e., non-$\tau$) transitions, and (ii) the trace extraction process discards the $\tau$ information, we use $\omega$ to preserve such information.
 %We call the pair consisting of a transition graph and a graph weight a \emph{weighted transition graph}.
@@ -137,6 +139,7 @@ $\braket{\const{aaaa},0.05},\braket{\const{caa},0.035},\braket{\const{caaa},0.01
 %\end{aligned}$$
 Table \ref{tab:proj} shows the projected transition graphs associated to such traces, where only the relevant information
 for embedding them is displayed (e.g., all the $\tau$-labeled nodes are removed).
+\vspace{-0.2cm}
 \end{example}
 	
 {Our proposed embedding $\gorgembed$ is computed for each pair $(\tg_\nonlogtrace,\omega)$ generated from each unfolded trace %transition graph generated in the former definition. The goal is to use
@@ -339,8 +342,9 @@ examples, we choose $t_f=0.0001$ and $\lambda=0.07$.
 %%\xout{Similar considerations can be also drawn from the}
 %embedding $\gorgembed(\overline{G}_{\logtrace})$ with strategies $\epsilon^1$ and $\nu^1$ %\xout{associated to the trace $\logtrace=\textup{caba}$ (also in Table --):} \ADD
 %{as} in Table \ref{tab:embsitar}: $\const{a}$ is clearly the most frequent label while $\const{b}$ and $\const{c}$ are equiprobable. The $2$-gram $\const{ca}$ appears twice in the trace set and then, it is more frequent than the remaining $2$-grams.
-	The dot products $k_{\gorgembed}(\logtrace,\nonlogtrace)=\braket{\gorgembed(\overline{G}_\logtrace),\;\gorgembed(\overline{G}_{\nonlogtrace})}$ with sub-embedding $\nu^1$ and $\epsilon^1$, for each trace $\nonlogtrace\in\WCal{0}{4}_{|\sigma'|\leq 4}$, are represented in Table \ref{tab:rank3}.%, where an explicit computation of $\gorgembed(\overline{G}_\logtrace)$ is omitted due to lack of space to the benefit of optimal ranking $\goldenrank$. 
-	$k_{\gorgembed}$ approximates the optimal ranking as it tends to rank the transition graphs $\closed{G}_\nonlogtrace$ (generated from $\overline{G}$ via projection) similarly to the $\net$-traces over $\mathcal{R}$. In the same table, the ranking similarities shared between the two different ranking strategies are highlighted in blue, while the most evident ranking discrepancies are marked in red. %In our experiment section, we are going to numerically quantify the similarity between these two strategies by adopting the Spearman correlation index \cite{BergamiBM20}.
+	The dot products $k_{\gorgembed}(\logtrace,\nonlogtrace)=\braket{\gorgembed(\overline{G}_\logtrace),\;\gorgembed(\overline{G}_{\nonlogtrace})}$ with sub-embed\-ding $\nu^1$ and $\epsilon^1$, for each trace $\nonlogtrace\in\WCal{0}{4}_{|\sigma'|\leq 4}$, are represented in Table \ref{tab:rank3}.%, where an explicit computation of $\gorgembed(\overline{G}_\logtrace)$ is omitted due to lack of space to the benefit of optimal ranking $\goldenrank$. 
+	$k_{\gorgembed}$ approximates the optimal ranking as it tends to rank the transition graphs $\closed{G}_\nonlogtrace$ (generated from $\overline{G}$ via projection) similarly to the $\net$-traces over $\mathcal{R}$. In the same table, the ranking similarities shared between the two different ranking strategies are highlighted in blue, while the most evident ranking discrepancies are marked in red. 
+\vspace{-0.2cm}
 \end{example}
 
 
@@ -468,7 +472,7 @@ examples, we choose $t_f=0.0001$ and $\lambda=0.07$.
 %\begin{example}\label{ex:cmpexample}
 %	Let us compare the ranking results by replacing in $\gorgembed$ the edge embedding $\epsilon^1$ with $\epsilon^2$. If we re-run the computations performed in  Example \ref{ex:11}, we obtain   Table \ref{tab:compLit}:  $\epsilon^1$ provides longer approximated subsequences if compared to $\epsilon^2$. Both embedding proposals tend to favor sequences containing one single node or one single subtrace due to the normalization of both  the edge and the nodes' distribution, but $\epsilon^2$ seems to be less influenced than $\epsilon^1$ in the change of the edge distribution. Therefore, $\epsilon^1$ proposal is to be preferred to $\epsilon^2$.
 %\end{example}
-We omit the proof of relevant properties due to the lack of space, under which it follows that our approach performs weakly-ideally.
+We omit the proof of relevant properties due to the lack of space, under which it follows that our approach performs weakly-ideally. \vspace{-0.4cm}
 %\noindent
 %\textbf{Properties.}\label{subsub:prop} Due to the lack of space, we omit the proofs for the considerations that follow. The kernel $k_{\gorgembed}$ associated to $\gorgembed$ is {a function of the distance  $\|\hat{\epsilon}-\hat{\epsilon}'\|_2^2$ and $\|\hat{\nu}-\hat{\nu}'\|_2^2$ for traces $\logtrace$ and ${\nonlogtrace}$:}
 %When $\hat{\epsilon}$ and $\hat{\epsilon}'$ are affected by numerical cancelation due to truncation error (i.e., $\norm{\hat{\epsilon}-\hat{\epsilon}'}{2}^2\to 0$), the $\nu$ strategy intervenes as a backup ranking strategy. The first term of the sum does not affect the ranking, as it reduces to a constant factor.
