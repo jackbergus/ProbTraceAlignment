@@ -1,14 +1,13 @@
 \begin{figure}[!t]
 	\centering
-	\includegraphics[width=.45\textwidth]{images/petri_tut.pdf}
+	\includegraphics[width=.49\textwidth]{images/petri_tut.pdf}
 	\caption{Stochastic Workflow Net modeling our use-case scenario.}\label{fig:petri_tut}
-	%\vspace{-0.6cm}
 \end{figure}
 \begin{figure}[!t]
-	\centering\includegraphics[width=.8\textwidth]{images/pipeline}
+	\centering\includegraphics[width=.7\textwidth]{images/pipeline}
 	\caption{Proposed pipeline to assess the probabilistic trace alignment.}\label{fig:pipe}
+	\vspace*{-0.5cm}
 \end{figure}
-\medskip
 
 \section{Probabilistic Trace Alignment Pipeline}
 %We now describe the proposed technique for computing probabilistic trace alignments. 
@@ -49,7 +48,6 @@ given a marking $\marking$ %of $N$
 and an enabled transition $t \in T_e$, the \emph{firing probability} of $t$ in $\marking$ is $\probt{t}{\marking}{\net} = \frac{W(t)}{\sum_{t'\in T_e}W(t')}$. %As required, 
 The probabilities associated to all enabled transitions in a marking always add up to 1.
  A \emph{valid sequence} $\seq = t_1\cdots t_n$ is a firing sequence starting from $m_{in}^\net$ and resulting in $m_{out}$. The probability $\prob{\seq}{\net}$ of a valid sequence is the product of the probabilities associated to each transition: $\prob{\seq}{\net} = \prod_{i \in \set{1,\ldots,n}}\prob{t_i}{\marking_{i-1},\net}$.  A sequence of labels $\run = \alpha_1 \cdots \alpha_n$ from $\alphabet$ is a \emph{run} if there exists a valid underlying sequence $\seq = t_1\cdots t_n$  having $\alpha_i$ as a label for each $t_i\in \seq$. Run $\run$ may have different underlying valid sequences in $\seqs{\run}{\net}$. A trace $\trace$ is a \emph{model trace} (or $\net$-trace for short) if there exists an underlying run $\run$ corresponding to $\trace$ once all $\tau$ are removed. There may be multiple runs $\runs{\trace}{\net}$ underlying an $\net$-trace $\trace$.  $\traces{\net}$ is the (possibly infinite) set of $\net$-traces. For a trace $\trace$ of $\net$, its probability $\prob{\trace}{\net}$ is then obtained by collecting all its underlying runs, in turn collecting all their underlying valid sequences, and summing up their respective probabilities: $\prob{\trace}{\net} = \sum_{\run \in \runs{\trace}{\net}} \sum_{\seq \in \seqs{\run}{\net}} \prob{\seq}{\net}$. This corresponds to the intuition that, to observe $\trace$, one can equivalently pick any of its underlying valid sequences. Notably, if a trace is not an $\net$-trace (i.e., it does not conform with $\net$), then its probability is 0.
- 
  These structural properties makes them suitable for loading BPMN nets as well: when the \texttt{Petri\_BPMN} is choosen, either the firing weight estimator is constant by default (\texttt{W\_CONSTANT}), or we can choose one from \cite{spdwe}. 
 \begin{example} %\small
 \label{ex:net}
@@ -181,7 +179,7 @@ Given an \uswn $\net$, we always assume that, in addition to its boundedness %, 
 $\rg{\net}$ does not contain loops where all edges are labeled with $\tau$.
 %\end{compactitem}
 %The first assumption indicates that a case of the process does not generate unboundedly many parallel threads, and guarantees in turn that the reachability graph contains finitely many states. The second assumption naturally corresponds to how $\tau$-transitions are used when modeling business processes, where they are essential in representing gateways (such as exclusive and parallel splits/joins), cascaded gateways without tasks in between, and skippable tasks.  In all these cases, 
-Multiple $\tau$-transitions may be used, but never creating completely invisible loops. Under this assumption, % $\net$ enjoys a very interesting property:
+Multiple $\tau$-transitions may be used, but never creating completely invisible loops. {The absence of loops that solely go through $\tau$-transitions is reasonable modeling wise (as skipping multiple times an entire loop iteration is conceptually not distinguishable from not skipping it at all - so we would require there the presence of at least a visible activity witnessing that the iteration was executed, possibly skipping parts of it)}. Under this assumption, % $\net$ enjoys a very interesting property:
  there are only boundedly many valid sequences that can produce a given  trace $\trace$. Hence, the probability of $\trace$ can be computed by:
 \begin{inparaenum}[\it (i)]
 \item exhaustively enumerating all its valid sequences;
