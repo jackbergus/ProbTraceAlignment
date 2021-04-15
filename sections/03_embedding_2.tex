@@ -194,7 +194,7 @@ For sub-embeddings $\epsilon$ and $\nu$, {in our experiment section}, we choose 
 $t_f\in [0,1]\subseteq\mathbb{R}^+_{0}$ (\textsf{Tuning}) and $\lambda\in [0,1]\subset\mathbb{R}^+_{0}$ (\textsf{Lambda}) are tuning parameters that can be
 inferred from the available data \cite{DriessensRG06}. The latter describes the previously mentioned decay factor, while $t_f$
 represents the relevance of our embedding representation as the number of edges within $\closed{G}_\nonlogtrace$ increases. In our experiments and
-examples, we choose $t_f=0.0001$ and $\lambda=0.07$.
+examples, we choose $t_f=0.0001$ and $\lambda=0.07$. Omitted proofs show that our embedding  performs weakly-ideally. \vspace{-0.4cm}
 %This representation is independent of the representation associated with a trace to be aligned. Therefore it does not have to be recomputed at each alignment with a different $\logtrace$.
 
 
@@ -256,7 +256,7 @@ examples, we choose $t_f=0.0001$ and $\lambda=0.07$.
 
 
 \begin{table}[!t]
-\vspace{+0.9mm}
+\vspace{+1.3mm}
 	\caption{Comparison between the ranking induced by the optimal ranking $\goldenrank$ and the proposed kernel $k_{\gorgembed}$ with embedding strategies $\epsilon^1$ and $\nu^1$: arrows $\boldsymbol{\downarrow}$ remark the column of choice under which we sort the rows.}\label{tab:rank3}
 	\centering
 	%	\begin{tabular}{l|c|ll}
@@ -337,6 +337,7 @@ examples, we choose $t_f=0.0001$ and $\lambda=0.07$.
 
 
 \begin{example}%\small \label{ex:11}
+	\vspace{0.2cm}
 %Table \ref{tab:emb2} shows the embeddings $\gorgembed(\overline{G}_\nonlogtrace)$ generated from Example \ref{ex:neue}, where the $l=|\nonlogtrace|$ for each $\unravelled$ trace $\nonlogtrace$.
 %{After representing trace $\logtrace=\const{caba}$ to be aligned as a graph (\figurename~\ref{fig:taustar}), we can represent its}
 %%\xout{Similar considerations can be also drawn from the}
@@ -344,7 +345,7 @@ examples, we choose $t_f=0.0001$ and $\lambda=0.07$.
 %{as} in Table \ref{tab:embsitar}: $\const{a}$ is clearly the most frequent label while $\const{b}$ and $\const{c}$ are equiprobable. The $2$-gram $\const{ca}$ appears twice in the trace set and then, it is more frequent than the remaining $2$-grams.
 	The dot products $k_{\gorgembed}(\logtrace,\nonlogtrace)=\braket{\gorgembed(\overline{G}_\logtrace),\;\gorgembed(\overline{G}_{\nonlogtrace})}$ with sub-embed\-ding $\nu^1$ and $\epsilon^1$, for each trace $\nonlogtrace\in\WCal{0}{4}_{|\sigma'|\leq 4}$, are represented in Table \ref{tab:rank3}.%, where an explicit computation of $\gorgembed(\overline{G}_\logtrace)$ is omitted due to lack of space to the benefit of optimal ranking $\goldenrank$. 
 	$k_{\gorgembed}$ approximates the optimal ranking as it tends to rank the transition graphs $\closed{G}_\nonlogtrace$ (generated from $\overline{G}$ via projection) similarly to the $\net$-traces over $\mathcal{R}$. In the same table, the ranking similarities shared between the two different ranking strategies are highlighted in blue, while the most evident ranking discrepancies are marked in red. 
-\vspace{-0.2cm}
+\vspace{-0.7cm}
 \end{example}
 
 
@@ -472,7 +473,7 @@ examples, we choose $t_f=0.0001$ and $\lambda=0.07$.
 %\begin{example}\label{ex:cmpexample}
 %	Let us compare the ranking results by replacing in $\gorgembed$ the edge embedding $\epsilon^1$ with $\epsilon^2$. If we re-run the computations performed in  Example \ref{ex:11}, we obtain   Table \ref{tab:compLit}:  $\epsilon^1$ provides longer approximated subsequences if compared to $\epsilon^2$. Both embedding proposals tend to favor sequences containing one single node or one single subtrace due to the normalization of both  the edge and the nodes' distribution, but $\epsilon^2$ seems to be less influenced than $\epsilon^1$ in the change of the edge distribution. Therefore, $\epsilon^1$ proposal is to be preferred to $\epsilon^2$.
 %\end{example}
-Omitted proofs show that our embedding  performs weakly-ideally. \vspace{-0.4cm}
+
 %\noindent
 %\textbf{Properties.}\label{subsub:prop} Due to the lack of space, we omit the proofs for the considerations that follow. The kernel $k_{\gorgembed}$ associated to $\gorgembed$ is {a function of the distance  $\|\hat{\epsilon}-\hat{\epsilon}'\|_2^2$ and $\|\hat{\nu}-\hat{\nu}'\|_2^2$ for traces $\logtrace$ and ${\nonlogtrace}$:}
 %When $\hat{\epsilon}$ and $\hat{\epsilon}'$ are affected by numerical cancelation due to truncation error (i.e., $\norm{\hat{\epsilon}-\hat{\epsilon}'}{2}^2\to 0$), the $\nu$ strategy intervenes as a backup ranking strategy. The first term of the sum does not affect the ranking, as it reduces to a constant factor.

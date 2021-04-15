@@ -28,7 +28,7 @@ and returns a ranking over all the $\net$-traces having a probability greater th
 %\subsection{Input}
 %\subsection{Stochastic Workflow Nets}\label{subsec:spn}
 
-\textbf{{Format: \texttt{Petri\_PNML}}.} Petri Nets and Generalized Stochastic Petri Nets are well-established formalisms \cite{DBLP:journals/tosem/PolyvyanyySWCM20} for modelling processes \cite{RoggeSoltiAW13} represented in the Petri Net Markup Language, supported by our tool. Due to the lack of space, we refer to \cite{spdwe} for the usual notation over Petri Nets. We restrict our interest to an interesting class of $1$-\textit{bounded} stochastic Petri nets with no timed transitions, namely \textsc{untimed Stochastic Workflow Nets} denoted as $N$. We now sketch the properties of the SWN accepted in PNML format: we consider two customary markings: the \emph{input} (resp.~\emph{output}) marking $m_{in}$ (resp.~$m_{out}$) assigning a single token to the input (resp.~output) place, and no token elsewhere. We assume to have a set $\alphabet = \tasks \cup \set{\tau}$ of labels, where labels in $\tasks$ indicate process tasks, whereas $\tau$ indicates an invisible execution step ($\tau$-transition). Labels are associated to transitions via a labelling function $\lambda$. A \emph{trace} is a finite sequence of labels from $\tasks$.
+\textbf{{Format: \texttt{Petri\_PNML}}.} Petri Nets and Generalized Stochastic Petri Nets are well-established formalisms \cite{DBLP:journals/tosem/PolyvyanyySWCM20} for modelling processes \cite{RoggeSoltiAW13} represented in the Petri Net Markup Language, supported by our tool. Due to the lack of space, we refer to \cite{spdwe} for the usual notation over Petri Nets. We restrict our interest to an interesting class of $1$-\textit{bounded} stochastic Petri nets with no timed transitions, namely \textsc{untimed Stochastic Workflow Nets} denoted as $N$. We now sketch the properties of the SWN accepted in PNML format and loaded as \textsf{PetriNet} objects: we consider two customary markings: the \emph{input} (resp.~\emph{output}) marking $m_{in}$ (resp.~$m_{out}$) assigning a single token to the input (resp.~output) place, and no token elsewhere. We assume to have a set $\alphabet = \tasks \cup \set{\tau}$ of labels, where labels in $\tasks$ indicate process tasks, whereas $\tau$ indicates an invisible execution step ($\tau$-transition). Labels are associated to transitions via a labelling function $\lambda$. A \emph{trace} is a finite sequence of labels from $\tasks$.
 %\begin{definition} An \emph{untimed Stochastic Workflow Net (\uswn)}
 %	is a tuple $\net = (P,T,F,\ell,W)$ where:
 %	\begin{inparaenum}[\itshape (i)]
@@ -73,7 +73,7 @@ The probabilities associated to all enabled transitions in a marking always add 
 \textbf{Format: \texttt{StochasticMatrix}.} %\label{subsec:ppn}
 The graph and trace embedding techniques %that we will use as the basis for computing probabilistic alignments 
 cannot be directly defined over reachability graphs, as they %. In fact, these techniques 
-rely on probabilistic \textsc{Transition Graphs} \cite{GartnerFW03}. Such graphs have transition probabilities associated to the edges, while nodes have labels in $\Sigma$, 
+rely on probabilistic \textsc{Transition Graphs} \cite{GartnerFW03} (class \textsf{ReadGraph}). Such graphs have transition probabilities associated to the edges, while nodes have labels in $\Sigma$, 
 and represented via transition matrices. Each node is mapped by a matrix $L$ to a single label, as the same label may be used for multiple nodes, while a matrix $R$ represents a probability distribution over the next nodes to be picked upon executing a transition.
 %where edges are only labeled by probabilities, whereas labels are attached to nodes. In addition, towards readily enabling efficient algorithmic techniques, such graphs are compactly defined using transition matrixes. We therefore take inspiration from \cite{GartnerFW03} and introduce the so-called \emph{probabilistic transition graphs}, which we will later use to encode \uswn{s} via their reachability graphs.
 Due to the lack of space, we refer to \cite{GartnerFW03} for the standard notation for {probabilistic Transition Graphs}:
@@ -156,7 +156,7 @@ Valid sequences and model traces as well as their probability are defined simila
 %\subsection{Input Transformation}
 \medskip
 
-\textbf{Transforming SWN$\to$TG.} If input is provided as a SWN $N$,  we internally represent all transition firings of an \uswn, together with their probabilities, in a reachability graph $RG(N)$ (\figurename~\ref{fig:rg}) by interpreting concurrency by interleaving. The transition probability function $P$ assigns to each transition an edge probability in $RG(N)$ as customary.  Due to the lack of space, we skip the customary definition of $RG(N)$.
+\textbf{Transforming SWN$\to$TG.} If input is provided as a SWN $N$,  we internally represent all transition firings of an \uswn, together with their probabilities, in a reachability graph $RG(N)$ (\figurename~\ref{fig:rg} and \texttt{PetriMatrix} file format) by interpreting concurrency by interleaving. The transition probability function $P$ assigns to each transition an edge probability in $RG(N)$ as customary.  Due to the lack of space, we skip the customary definition of $RG(N)$.
 %\begin{definition}
 %The \emph{Reachability Graph} $\rg{\net}$ of \uswn \net is a triple $(M,E,P)$ where:
 %\begin{compactitem}[$\bullet$]
@@ -185,12 +185,13 @@ $\rg{\net}$ does not contain loops where all edges are labeled with $\tau$.
 %\end{compactitem}
 %The first assumption indicates that a case of the process does not generate unboundedly many parallel threads, and guarantees in turn that the reachability graph contains finitely many states. The second assumption naturally corresponds to how $\tau$-transitions are used when modeling business processes, where they are essential in representing gateways (such as exclusive and parallel splits/joins), cascaded gateways without tasks in between, and skippable tasks.  In all these cases, 
 Multiple $\tau$-transitions may be used, but never creating completely invisible loops. {The absence of loops that solely go through $\tau$-transitions is reasonable modeling wise (as skipping multiple times an entire loop iteration is conceptually not distinguishable from not skipping it at all - so we would require there the presence of at least a visible activity witnessing that the iteration was executed, possibly skipping parts of it)}. Under this assumption, % $\net$ enjoys a very interesting property:
- there are only boundedly many valid sequences that can produce a given  trace $\trace$. Hence, the probability of $\trace$ can be computed by:
+ there are only boundedly many valid sequences that can produce a given  trace $\trace$. The probability of $\trace$ can be computed by:
 \begin{inparaenum}[\it (i)]
 \item exhaustively enumerating all its valid sequences;
 \item calculating the probability of each such sequence;
 \item summing up all the so-obtained probabilities.
 \end{inparaenum}
+We directly encode \textsf{PetriNet}s to \textsf{ReadGraph}.
 %\figurename~\ref{fig:rg} shows an example of a reachability graph.
 \begin{example} %\small
   \label{ex:trace}
@@ -245,7 +246,7 @@ $\prob{\const{caa}}{\net} = 1 \cdot \rho_{24} \cdot 1 \cdot \rho_{65} \cdot \rho
 %
 %We use \uswns for modelling business processes: in fact, it can be shown \cite{RaedtsPUWGS07} that it is always possible to convert BPMNs to \uswns. Last, we also assume that a transition is enabled when all of its input places contain at least one token and that, when a transition fires, we remove one token from each of its input places and depose tokens for each of its output places.
 
-We can show that there exists a conversion from $\rg{\net}$ (\figurename~\ref{fig:rg}) into a transition graph $\tg_{\rg{\net}}$ (\figurename~\ref{fig:orig}) preserving model traces as well as their probabilities via well-known techniques used to \emph{shift labels} from automata theory.  Reachability Graphs can be directly provided as an input via \texttt{PetriMatrix} format.
+We can show that there exists a conversion from $\rg{\net}$ (\figurename~\ref{fig:rg}) into a transition graph $\tg_{\rg{\net}}$ (\figurename~\ref{fig:orig}) preserving model traces as well as their probabilities via well-known techniques used to \emph{shift labels} from automata theory.  
 
 
 \textbf{$\tau$-closure} The resulting transition graph $\tg_{\rg{\net}}$ is processed applying a \emph{$\hidden$-closure} that compiles away
