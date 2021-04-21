@@ -9,6 +9,7 @@
 	\vspace*{-0.5cm}
 \end{figure}
 
+\vspace*{-0.5cm}
 \section{Probabilistic Trace Alignment Pipeline}
 %We now describe the proposed technique for computing probabilistic trace alignments. 
 Our approach (\figurename~\ref{fig:pipe}) takes as input
@@ -194,7 +195,7 @@ Multiple $\tau$-transitions may be used, but never creating completely invisible
 We directly encode \textsf{PetriNet}s to \textsf{ReadGraph}.
 %\figurename~\ref{fig:rg} shows an example of a reachability graph.
 \begin{example} %\small
-  \label{ex:trace}
+\vspace*{-0.5cm}  \label{ex:trace}
 Consider the \uswn \net of Example~\ref{ex:net}. Considering trace $\const{caa}$, it is easy to see that it has only one underlying run, namely $\const{\tau c \tau a a \tau}$, in turn produced by a single underlying valid sequence, and that
 %The firing probability of picking the first $\tau$-transition starting from the input marking is $1$, as there are no alternatives. In the new marking, where only one token is assigned to $p_2$, the firing probability of choosing the $\tau$-transition above is $\rho_{23} = \frac{v_{\tau_2}}{v_{\tau_2}+v_c}$, whereas that of choosing the $c$-transition below is $\rho_{24} = \frac{v_c}{v_{\tau_2}+v_c}$. Upon choosing the transition below, the new marking assigns only to $p_4$ one token, leaving just one choice to continue by moving that token to $p_6$. In that marking, the probability of choosing the $a$-transition above is $\rho_{65} = \frac{v_{a_3}}{v_{a_3}+v_b}$, resulting in the token being moved to $p_5$. In this new marking, the probability of iterating over the $a$-transition above is $\rho_{55} = \frac{v_{\tau_3}}{v_{\tau_3}+v_{a_2}}$, while that of completing in the output marking via the enabled $\tau$-transition is $\rho_{57} = \frac{v_{\tau_3}}{v_{\tau_3}+v_{a_2}}$. Hence, all in all
 $\prob{\const{caa}}{\net} = 1 \cdot \rho_{24} \cdot 1 \cdot \rho_{65} \cdot \rho_{55} \cdot \rho_{57}$.
@@ -248,14 +249,12 @@ $\prob{\const{caa}}{\net} = 1 \cdot \rho_{24} \cdot 1 \cdot \rho_{65} \cdot \rho
 
 We can show that there exists a conversion from $\rg{\net}$ (\figurename~\ref{fig:rg}) into a transition graph $\tg_{\rg{\net}}$ (\figurename~\ref{fig:orig}) preserving model traces as well as their probabilities via well-known techniques used to \emph{shift labels} from automata theory.  
 
-
 \textbf{$\tau$-closure} The resulting transition graph $\tg_{\rg{\net}}$ is processed applying a \emph{$\hidden$-closure} that compiles away
 $\tau$-transitions. This results into a new transition graph $\closed{\tg_{\rg{\net}}}$ (\figurename~\ref{fig:closed}) %that on the one hand only retains
 retaining $\hidden$ labels only in the initial and accepting states while, for the rest, it exclusively operates over visible labels in $\tasks$. %, and, on the other, continues to preserve model traces and their probabilities. Also in this case we omit the details, as 
 The transformation relies on well-known automata-based techniques for removing $\epsilon$-moves while preserving model traces, as well as their associated probabilities. %The only non-trivial observation is that, even in our case where probabilities are present, 
 All $\tau$ transitions can still be removed thanks to the working hypothesis done for \uswn{s}, as no loops can contain only $\tau$ transitions. %The transition graph in \figurename~\ref{fig:orig} results in that of \figurename~\ref{fig:closed}.
-\medskip
 
 \textbf{Unfolding.} Next, we efficiently unfold the previously closed graph to collect TG-traces having probability greater or equal than $\pmin$ (\textsf{Minimum trace probability}) via the Eigen3 linear algebra library. Unfolding is efficiently performed via sparse matrices for TGs over the Eigen library. %The $\hidden$-closed transition graph $\closed{\tg_{\rg{\net}}}$ is \unravelled, so as to collect all the model traces that have a probability of at least $\pmin$. To do so, we rely on a key property that $\closed{\tg_{\rg{\net}}}$ inherits from the fact that it results from an \uswn. 
 Since an \uswn has a Workflow net as underlying control-flow structure and given that TG inherits the results from SWNs, no loop can be executed without strictly decreasing the resulting probability. So, all valid sequences with a resulting probability of at least $\pmin$ can be enumerated and returned in a set. The so-obtained sequences are then combined by merging those that produce the same trace, summing up their probabilities, thus obtaining the set of all the traces having a probability greater than or equal to $\pmin$, $\ptraces{\closed{\tg_{\rg{\net}}}}{\pmin}$. The closure operation also implies that the notion of model trace collapses with the one of run modulo removing the initial and the final $\tau$ labels attached to the initial and accepting nodes. %In addition to that, traces might be also pre-filtered by \textsf{Maximum complete trace length}. 
-\medskip
+

@@ -1,0 +1,48 @@
+This is BibTeX, Version 0.99d (TeX Live 2020/Debian)
+Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
+The top-level auxiliary file: main.aux
+The style file: splncs04.bst
+Database file #1: biblio3.bib
+Warning--empty year in RoggeSoltiAW13
+You've used 16 entries,
+            2850 wiz_defined-function locations,
+            712 strings with 7530 characters,
+and the built_in function-call counts, 10154 in all, are:
+= -- 874
+> -- 277
+< -- 25
++ -- 118
+- -- 98
+* -- 637
+:= -- 1240
+add.period$ -- 26
+call.type$ -- 16
+change.case$ -- 111
+chr.to.int$ -- 0
+cite$ -- 17
+duplicate$ -- 901
+empty$ -- 907
+format.name$ -- 112
+if$ -- 2254
+int.to.chr$ -- 0
+int.to.str$ -- 16
+missing$ -- 176
+newline$ -- 54
+num.names$ -- 32
+pop$ -- 325
+preamble$ -- 1
+purify$ -- 81
+quote$ -- 0
+skip$ -- 306
+stack$ -- 0
+substring$ -- 650
+swap$ -- 535
+text.length$ -- 25
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 64
+warning$ -- 1
+while$ -- 88
+width$ -- 18
+write$ -- 169
+(There was 1 warning)
