@@ -6,10 +6,8 @@
 \begin{figure}[!t]
 	\centering\includegraphics[width=.7\textwidth]{images/pipeline}
 	\caption{Proposed pipeline to assess the probabilistic trace alignment.}\label{fig:pipe}
-	\vspace*{-0.5cm}
 \end{figure}
 
-\vspace*{-0.5cm}
 \section{Probabilistic Trace Alignment Pipeline}
 %We now describe the proposed technique for computing probabilistic trace alignments. 
 Our approach (\figurename~\ref{fig:pipe}) takes as input
@@ -195,7 +193,7 @@ Multiple $\tau$-transitions may be used, but never creating completely invisible
 We directly encode \textsf{PetriNet}s to \textsf{ReadGraph}.
 %\figurename~\ref{fig:rg} shows an example of a reachability graph.
 \begin{example} %\small
-\vspace*{-0.5cm}  \label{ex:trace}
+	 \label{ex:trace}
 Consider the \uswn \net of Example~\ref{ex:net}. Considering trace $\const{caa}$, it is easy to see that it has only one underlying run, namely $\const{\tau c \tau a a \tau}$, in turn produced by a single underlying valid sequence, and that
 %The firing probability of picking the first $\tau$-transition starting from the input marking is $1$, as there are no alternatives. In the new marking, where only one token is assigned to $p_2$, the firing probability of choosing the $\tau$-transition above is $\rho_{23} = \frac{v_{\tau_2}}{v_{\tau_2}+v_c}$, whereas that of choosing the $c$-transition below is $\rho_{24} = \frac{v_c}{v_{\tau_2}+v_c}$. Upon choosing the transition below, the new marking assigns only to $p_4$ one token, leaving just one choice to continue by moving that token to $p_6$. In that marking, the probability of choosing the $a$-transition above is $\rho_{65} = \frac{v_{a_3}}{v_{a_3}+v_b}$, resulting in the token being moved to $p_5$. In this new marking, the probability of iterating over the $a$-transition above is $\rho_{55} = \frac{v_{\tau_3}}{v_{\tau_3}+v_{a_2}}$, while that of completing in the output marking via the enabled $\tau$-transition is $\rho_{57} = \frac{v_{\tau_3}}{v_{\tau_3}+v_{a_2}}$. Hence, all in all
 $\prob{\const{caa}}{\net} = 1 \cdot \rho_{24} \cdot 1 \cdot \rho_{65} \cdot \rho_{55} \cdot \rho_{57}$.

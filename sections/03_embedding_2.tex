@@ -28,7 +28,6 @@ we can retrieve the neighborhood of $x$ in $\mathcal{X}$ of size $k$ by pre-orde
 %\end{figure*}
 %\vspace{-0.6cm}
 
-\vspace{+0.2cm}
 \noindent
 \textbf{1) Optimal-Ranking Trace Aligner.}\label{subsec:eta}
 %One way to probabilistically align traces is to 
@@ -46,7 +45,6 @@ a normalized similarity score $s_d(\logtrace,\nonlogtrace):=\frac{1}{d(\logtrace
 {The golden ranking function (i.e., the one producing the optimal ranking) can therefore be represented as $\goldenrank(\logtrace,\nonlogtrace)=\probskip{\nonlogtrace} \probskip{\logtrace} s_d(\logtrace,\nonlogtrace)$. Such function can be exploited to generate the best optimal-ranking trace alignment for a log trace $\logtrace$, where $\goldenrank$ must be computed a-new for all the possible $\logtrace$.
 	
 	
-\vspace{+0.2cm}	
 \noindent
 \textbf{2) Approximate-Ranking Trace Embedder.}\label{subsec:ate}
 %Ranking optimality comes at the sub-optimal cost of a brute-force recomputation of $\goldenrank$ for each novel trace $\logtrace$ to align.
@@ -126,7 +124,6 @@ Since a trace embedding for $\nonlogtrace\in\WCal{\pmin}{n}$ adequately represen
 	$\const{caaa}$ & \includegraphics{images/trace_ca_loop} & $4$ & $\color{violet}\pb\pf$\\
 	\bottomrule
 \end{tabular}}
-\vspace{-0.6cm}
 \end{table}
 %The graph weight $\omega$ derives from the outgoing edges of the initial node and the ingoing edges of the accepting node when such nodes are labeled as $\tau$. Given that (i) the embedding strategy from \cite{LodhiSSCW02} allows trace embedding only for visible (i.e., non-$\tau$) transitions, and (ii) the trace extraction process discards the $\tau$ information, we use $\omega$ to preserve such information.
 %We call the pair consisting of a transition graph and a graph weight a \emph{weighted transition graph}.
@@ -140,7 +137,6 @@ $\braket{\const{aaaa},0.05},\braket{\const{caa},0.035},\braket{\const{caaa},0.01
 %\end{aligned}$$
 Table \ref{tab:proj} shows the projected transition graphs associated to such traces, where only the relevant information
 for embedding them is displayed (e.g., all the $\tau$-labeled nodes are removed).
-\vspace{-0.2cm}
 \end{example}
 	
 {Our proposed embedding $\gorgembed$ is computed for each pair $(\tg_\nonlogtrace,\omega)$ generated from each unfolded trace %transition graph generated in the former definition. The goal is to use
@@ -195,7 +191,7 @@ For sub-embeddings $\epsilon$ and $\nu$  we choose two possible interchangeable 
 $t_f\in [0,1]\subseteq\mathbb{R}^+_{0}$ (\textsf{Tuning}) and $\lambda\in [0,1]\subset\mathbb{R}^+_{0}$ (\textsf{Lambda}) are tuning parameters that can be
 inferred from the available data \cite{DriessensRG06}. The latter describes the previously mentioned decay factor, while $t_f$
 represents the relevance of our embedding representation as the number of edges within $\closed{G}_\nonlogtrace$ increases. In our experiments and
-examples, we choose $t_f=0.0001$ and $\lambda=0.07$. Omitted proofs show that our embedding  performs weakly-ideally. \vspace{-0.4cm}
+examples, we choose $t_f=0.0001$ and $\lambda=0.07$. Omitted proofs show that our embedding  performs weakly-ideally. 
 %This representation is independent of the representation associated with a trace to be aligned. Therefore it does not have to be recomputed at each alignment with a different $\logtrace$.
 
 
@@ -525,6 +521,5 @@ examples, we choose $t_f=0.0001$ and $\lambda=0.07$. Omitted proofs show that ou
 %
 %%\ADD{Such lemma is going to be empirically evaluated in our experiment section.}
 
-\vspace*{-0.7cm}
 \subsubsection*{Acknowledgments}
-This research has been partially supported by the project IDEE (FESR1133) funded by the Eur.\ Reg.\ Development Fund (ERDF) Investment for Growth and Jobs Programme 2014-2020. 
+This research has been partially supported by the project IDEE (FESR1133) funded by the Eur.\ Reg.\ Development Fund (ERDF) Investment for Growth and Jobs Programme 2014-2020.
