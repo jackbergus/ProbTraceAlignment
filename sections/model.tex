@@ -1,4 +1,19 @@
 \section{The Process Model}
- 
+To formalize the kind of processes shown in Figure~\ref{fig:bpmn-order}, we resort to a special class of stochastic Petri nets, following what have been done in the literature \cite{DBLP:conf/bpm/LeemansSA19,DBLP:journals/tosem/PolyvyanyySWCM20}. We motivate next what are the features of the class we consider, and why they lead to an interesting trade-off between expressiveness and amenability to analysis. Figure~\ref{fig:petri_tut} shows the encoding of the BPMN diagram of Figure~\ref{fig:bpmn-order} into the Petri net class supported by our conformance checking pipeline.
+
+\smallskip
+\noindent
+\textbf{Untimed, stochastic nets.}
+We focus on stochastic Petri nets with immediate transitions, that is, we do not consider timed aspects such as delays and deadlines, but concentrate on the key feature of having a probability distribution over the firable transitions. This is achieved by taking a standard Petri net and by assigning weights to its transitions. At each execution step, the probability of firing an enabled transition is then simply computed by dividing its weight by the total weight of all currently enabled transitions.
+
+\smallskip
+\noindent
+\textbf{Workflow nets.} In the whole Petri net spectrum, we focus, as customary in process mining, on workflow nets with a distinct pair of input and output places, marking the start and completion of a case. Specifically, a \emph{model run} is a sequence of fireable transitions leading from the initial marking (which assigns one single token to the special input place, while leaving all the other places empty) to the final marking (which assigns one single token to the special output place, while leaving all the other places empty). In our specific setting, focusing on workflow nets has the advantage that every model run is a maximal sequence of transition firings that cannot be extended into a model run. We will go deeper into this aspect next.
+
+\smallskip
+\noindent
+\textbf{Silent transitions.} To provide support for control-flow gateways, we include silent transitions in the net. More specifically, every transition comes with a label that corresponds either to the name of a (visible) task, or to the special symbol $\tau$ (denoting a silent transition). Figure~\ref{fig:petri_tut} shows how $\tau$-transitions are used to capture the BPMN process of Figure~\ref{fig:bpmn-order}. In particular, silent transition $t_2$ is used to model that one can loop to add multiple items to the order. Notice that, for simplicity of modeling, we allow the modeler to label multiple transitions with the same task.
+
+Having silent transitions and repeated labels deeply impacts the obtained framework. First, a model run does not directly correspond to a model trace (consisting of a legal sequence of tasks): 
 
 \clearpage
