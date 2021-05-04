@@ -5,7 +5,7 @@
 %An alignment of a trace with an \uswn could be represented by the best model trace maximizing the combined provision of minimum trace alignment cost and maximum model trace probability. However, in some cases, the user could prefer to identify an alignment with a lower cost even if based on a less probable model trace, while, in other cases, the user could favor a model trace with a higher probability at the expense of a higher alignment cost.
 %Therefore, we need to return the best $k$ alignments among all the distinct \unravelled\ model traces in $\ptraces{\net}{\pmin}=\ptraces{\closed{\tg_{\rg{\net}}}}{\pmin}$. 
 In the database community, this problem is usually tackled via $k$-Nearest Neighbors ($k$NN) that refers to finding the $k$ nearest data points to a \textit{query} $x$ from a set $\mathcal{X}$ of \textit{data points} via a distance function $d_k$ defined over $\mathcal{X}\cup\{x\}$. {In particular, by exploiting ad-hoc data structures, such as VP-Trees and KD-Trees, %VP-Trees \cite{Fu2000} \cite{Maneewongvatana99}, and M-Trees \cite{Ciaccia},
-we can retrieve the neighborhood of $x$ in $\mathcal{X}$ of size $k$ by pre-ordering (\textit{indexing}) $\mathcal{X}$ via $d_k$ and starting the search from the top-$1$ alignment. Our tool benchmarks both strategies and gives results in CSV.
+we can retrieve the neighborhood of $x$ in $\mathcal{X}$ of size $k$ by pre-ordering (\textit{indexing}) $\mathcal{X}$ via $d_k$ and starting the search from the top-$1$ alignment.
 
 %Usually, $x$ and $\mathcal{X}$ are represented as numerical vectors via an embedding $\phi$. {By exploiting ad-hoc data structures such as Vp-Trees \cite{Fu2000}, Kd-Trees \cite{Maneewongvatana99}, and M-Trees \cite{Ciaccia}, we can retrieve the neighborhood of $x$ in $\mathcal{X}$ of size $k$  by pre-ordering (\textit{indexing}) $\mathcal{X}$  via $d_k$. Thus, we do not need to analyze the entire space, but just start the search from the top-$1$ alignment. We prefer embeddings $\phi$ for $\mathcal{X}$ that are independent of the query of choice $x$, as it would not require to constantly change the numeric vector representation for $\mathcal{X}$.
 
@@ -128,7 +128,7 @@ Since a trace embedding for $\nonlogtrace\in\WCal{\pmin}{n}$ adequately represen
 %The graph weight $\omega$ derives from the outgoing edges of the initial node and the ingoing edges of the accepting node when such nodes are labeled as $\tau$. Given that (i) the embedding strategy from \cite{LodhiSSCW02} allows trace embedding only for visible (i.e., non-$\tau$) transitions, and (ii) the trace extraction process discards the $\tau$ information, we use $\omega$ to preserve such information.
 %We call the pair consisting of a transition graph and a graph weight a \emph{weighted transition graph}.
 \begin{example}\label{ex:neue}
-Given the $\tau$-closed transition graph $\closed{\tg_{\rg{\net}}}$ in \figurename~\ref{fig:closed}, we assign the probability values
+Given the $\tau$-closed transition graph $\closed{\tg_{\rg{\net}}}$ resulting from the process model, we assign the probability values
 $\pa=0.8$, $\pb=0.2$, $\pc=\pf=0.5$, $\pd=0.7$, and $\pe=0.3$. The $\ptraces{\expN}{0}$ with maximum length $4$ are:
 %$$\begin{aligned}
 %\ptraces{\expN}{0}_{|\nonlogtrace|\leq 4}=
