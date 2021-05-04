@@ -1,6 +1,6 @@
 \section{The Process Model}
 We resort to a special class of stochastic Petri nets, following what have been done in the literature \cite{DBLP:conf/bpm/LeemansSA19,DBLP:journals/tosem/PolyvyanyySWCM20}. %We motivate next what are the features of the class we consider, and why they lead to an interesting trade-off between expressiveness and amenability to analysis.
- Figure~\ref{fig:petri_tut} shows the encoding of the BPMN diagram of Figure~\ref{fig:bpmn-order} into the Petri net class supported by our conformance checking pipeline.
+% Figure~\ref{fig:petri_tut} shows the encoding of the BPMN diagram of Figure~\ref{fig:bpmn-order} into the Petri net class supported by our conformance checking pipeline.
 
 
 \noindent
@@ -15,7 +15,7 @@ In our specific setting, every model run coming from workflow nets is a maximal 
 
 
 \noindent
-\textbf{Silent transitions.} To provide support for control-flow gateways, we include silent transitions in the net. More specifically, every transition comes with a label that corresponds either to the name of a (visible) task, or to the special symbol $\tau$ (denoting a silent transition). Figure~\ref{fig:petri_tut} shows how $\tau$-transitions are used to capture the BPMN process of Figure~\ref{fig:bpmn-order}. In particular, silent transition $t_2$ is used to model that one can loop to add multiple items to the order. Notice that, for simplicity of modeling, we support the possibility of labeling multiple transitions with the same task.
+\textbf{Silent transitions.} To provide support for control-flow gateways, we include silent transitions in the net. More specifically, every transition comes with a label that corresponds either to the name of a (visible) task, or to the special symbol $\tau$ (denoting a silent transition). Figure~\ref{fig:petri_tut} shows that silent transition $t_2$ is used to model that one can loop to add multiple items to the order. Notice that, for simplicity of modeling, we support the possibility of labeling multiple transitions with the same task.
 Silent transitions and repeated labels  characterize our framework: a model run does not directly correspond to a model trace, intended as a ``legal'' sequence of (visible) tasks according to the process. On the one hand, a model run yields a corresponding trace by extracting, in order, the labels attached to the transitions contained therein, projecting away the invisible ones. E.g., model run $\rho$ above yields the model trace $\langle \textsf{add item},\,\textsf{close order},\,\textsf{archive order}\rangle$. On the other hand, the same model trace may be obtained through distinct model runs, differing from each other in terms of the silent tasks they contain. To obtain the probability of a model trace, we sum  the probabilities of \emph{all} (possibly, infinitely many) model runs yielding that trace. This number is guaranteed, by construction, to be between 0 and 1 (since the collective sum of the probabilities of all model runs is indeed 1). In our example, the probability of $\langle \textsf{add item},\,\textsf{close order},\,\textsf{archive order}\rangle$ is that of the model run $\rho$ (i.e., $0.08$), as $\rho$ is the only model run yielding that trace.
 
 
