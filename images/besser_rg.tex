@@ -1,0 +1,135 @@
+
+\documentclass[tikz]{standalone}
+
+\usetikzlibrary{arrows,shapes,automata,petri,positioning}
+\usepackage{xcolor}
+\input{tikz-macros}
+\usepackage{bpmn-events}
+\usepackage{bpmn-gateways}
+
+
+\tikzset {
+  mytask/.style={
+    task,
+    draw=marcofucsia3!100,
+    fill=marcofucsia3!10,
+    font=\scriptsize
+  }
+}
+
+
+\begin{document}
+	
+\begin{tikzpicture}[node distance=0.3cm and 0.5cm,>=stealth',bend angle=45,auto,thick]
+	
+
+ 
+  \node[
+  ] (aijoin) {};
+    
+  \node[
+    mytask,
+    align=center,
+    right=of aijoin,
+  ] (ai) {
+      \begin{tabular}{@{~}c@{}}
+        $\tcolor\textsf{add}$\\
+        $\tcolor\textsf{item}$
+      \end{tabular}
+    };
+ 
+ 
+ \path (ai) edge [loop above] node {\color{magenta}0.2} (ai);
+ 
+
+
+
+  
+  \node[
+    mytask,
+    align=center,
+    right=of ai,
+  ] (co) {
+      \begin{tabular}{@{~}c@{}}
+        $\tcolor\textsf{close}$\\
+        $\tcolor\textsf{order}$
+      \end{tabular}
+    };
+
+
+
+\path (ai) edge[->]              node[above] {\color{magenta}0.8} (co);
+ 
+
+
+
+  
+  \node[
+    mytask,
+    align=center,
+    above right=of co,
+  ] (ao) {
+      \begin{tabular}{@{~}c@{}}
+        $\tcolor\textsf{accept}$\\
+        $\tcolor\textsf{order}$
+      \end{tabular}
+    };
+\path (co) edge[->]              node[midway] {\color{magenta}0.9} (ao);
+
+  \node[
+    mytask,
+    align=center,
+    right=of ao,
+  ] (po) {
+      \begin{tabular}{@{~}c@{}}
+        $\tcolor\textsf{pay}$\\
+        $\tcolor\textsf{order}$
+      \end{tabular}
+    };
+
+
+
+  \node[
+    below=of po
+  ] (b2) {};
+
+
+\path (ao) edge[->]              node[midway] {\color{magenta}1} (po);
+
+  \node[
+    mytask,
+    align=center,
+    below right=of co,
+  ] (ro) {
+      \begin{tabular}{@{~}c@{}}
+        $\tcolor\textsf{refuse}$\\
+        $\tcolor\textsf{order}$
+      \end{tabular}
+    };
+
+\path (co) edge[->]              node[midway] {\color{magenta}0.1} (ro);
+
+  \node[
+    mytask,
+    align=center,
+    right=3cm of co,
+    double,
+    double distance=.2mm
+  ] (ar) {
+      \begin{tabular}{@{~}c@{}}
+        $\tcolor\textsf{archive}$\\
+        $\tcolor\textsf{order}$
+      \end{tabular}
+    };
+
+
+\path (po) edge[->]              node[midway] {\color{magenta}1} (ar);
+\path (ro) edge[->]              node[midway] {\color{magenta}1} (ar);
+
+  
+ 
+  \draw[sequence] (aijoin) -- (ai);
+    
+\end{tikzpicture}
+	
+\end{document}

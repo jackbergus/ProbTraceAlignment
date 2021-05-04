@@ -69,8 +69,8 @@ $\omega$ factor for preserving probabilities from and to $\tau$ transitions. We 
 numerical truncation errors induced by trace length and probability distribution skewness through two sub-embedding strategies,
 $\epsilon^x$ and $\nu^x$, where the former descends from $\trembed$ and the latter approximates the trace similarity via label frequencies similarity.
 \end{alphalist}
-Since a trace embedding for $\nonlogtrace\in\WCal{\pmin}{n}$ adequately representing the transitions in our implementation requires an intermediate $G$ representation, we map each $\nonlogtrace$ to a pair $(\tg_\nonlogtrace,\omega)$}, where \begin{inparaenum}[\it (i)]
-\item $\tg_\nonlogtrace$ is a transition graph containing all nodes and edges leading to the valid sequences in $\expN$ forming a trace $\nonlogtrace$, where all $\tau$-labelled nodes are removed, while
+Since a model trace embedding  adequately representing the transitions in our implementation requires an intermediate $G$ representation, we map each $\nonlogtrace$ to a pair $(\tg_\nonlogtrace,\omega)$}, where \begin{inparaenum}[\it (i)]
+\item $\tg_\nonlogtrace$ is a transition graph containing all the paths describing $\nonlogtrace$, where all $\tau$-labelled nodes are removed, while
 \item the graph weight $\omega$ preserves the weight of the possible initial and final edges that were removed due to the former requirement.
 \end{inparaenum}
 

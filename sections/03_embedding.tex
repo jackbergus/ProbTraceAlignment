@@ -1,7 +1,36 @@
 % !TeX root=../main.tex
 
 %\subsection{Computation pipeline}
-\section{Alignment Strategy}\label{subsec:as}
+\section{Probabilistic Trace Alignment Pipeline}
+%We now describe the proposed technique for computing probabilistic trace alignments. 
+Our approach takes as input
+\begin{inparaenum}[\it (i)]
+	\item a reference model represented as Stochastic Workflow Nets $\net$ or an equivalent Transition Graph $G$,
+	\item a minimum, positive probability threshold $\pmin \in (0,1]$
+	\item a trace $\trace$ of interest,
+\end{inparaenum}
+and returns a ranking over all the $\net$-traces having a probability greater than or equal to $\pmin$, based on a combined consideration of their probability values and their distance to $\trace$. 
+
+\begin{figure}[!t]
+	\centering
+	\includegraphics[width=.4\textwidth]{images/besser_rg}
+	\caption{Transition Graph for \figurename~\ref{fig:bpmn-order}.}
+\end{figure}
+\medskip
+\noindent
+\textbf{Transition Graphs} The trace probability can be directly compute by inspecting the reachability graph of the net. Still, graph embedding techniques required to represent traces as data points (e.g., vectors) 
+cannot be directly defined over reachability graphs. as they %. In fact, these techniques 
+rely on probabilistic \textsc{Transition Graphs} \cite{GartnerFW03}.  Such TGs can be computed by firstly shifting the transition labels over graph nodes, and performing $\tau$-closures, while preserving $\tau$s for both start and completion cases if required to preserve traces' probability. The resulting  graphs are described by transition probabilities in a matrix $R$, while nodes are associated to their labels via a matrix $L$, while the same label may be used for multiple nodes. $R$ is then a probability distribution over the next nodes to be picked upon executing a transition.
+A special combination of matrices $L$ and $R$ \cite{GartnerFW03} describes the probability of reaching a node labeled by $\beta\in\Sigma$ from any node labeled $\alpha\in\Sigma$ in $n$ steps. Model traces  are defined similarly from \uswn{s}. This gives us a direct way to compute the probability of such a model trace over TGs:
+\begin{enumerate}
+	\item  we fetch all model runs of length at most $n+(n+1)\cdot b$ (which can be easily done with a bounded-depth search strategy over reachable markings);
+	\item among all such runs, we keep all and only those that yield the model trace of interest;
+	\item we sum up the probabilities of the so-filtered model runs.
+\end{enumerate}
+
+
+
+\textbf{Alignment Strategy}\label{subsec:as}
 %Our technique is realized through the pipeline shown in \figurename~\ref{fig:pipe}, consisting of the following steps.
 %
 %In step 1, the reachability graph $\rg{\net}$ of $\net$ is constructed.
