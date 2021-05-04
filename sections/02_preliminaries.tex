@@ -38,12 +38,14 @@ In conceptual modeling terms, this requirement imposes that it is not possible t
 
 On the other hand, it is perfectly possible to have loops with skippable tasks, provided that there exists at least one visible transition witnessing that an iteration in the loop has been executed. Figure~\ref{fig:skip-step} shows a variant of the process fragment in Figure~\ref{fig:skip-iteration} where each iteration must be witnessed by (visibly) picking an item, then deciding whether to add it or not (the latter choice resulting in a silent step). This variant has bounded silence, as two consecutive iterations need to contain two distinct executions of the \textsf{pick item} task, with at most one silent transition in between. 
 
-In mathematical terms, bounded silence nets enjoy the following property. Consider a net with a bound $b$ on the maximum number of consecutive silent transitions. Given a model trace of length $n$, a model run yielding that trace must have a length bounded by $n+(n+1)\cdot b$. This gives us a direct way to compute the probability of such a model trace:
+In mathematical terms, our untimed, stochastic workflow nets with bounded silence enjoy the following property. Consider a net with a bound $b$ on the maximum number of consecutive silent transitions. Given a model trace of length $n$, a model run yielding that trace must have a length bounded by $n+(n+1)\cdot b$. This gives us a direct way to compute the probability of such a model trace:
 \begin{enumerate}
 \item  we fetch all model runs of length at most $n+(n+1)\cdot b$ (which can be easily done with a bounded-depth search strategy over reachable markings);
 \item among all such runs, we keep all and only those that yield the model trace of interest;
 \item we sum up the probabilities of the so-filtered model runs. 
 \end{enumerate}
+
+Notice that if the net is bounded in the usual Petri net sense, then we can directly compute this probability by inspecting the reachability graph of the net.
 
 
 
