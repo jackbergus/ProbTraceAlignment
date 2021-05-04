@@ -3,28 +3,28 @@
 %	\includegraphics[scale=0.1]{images/tool.png}
 %	\caption{}\label{fig:tool}
 %\end{figure}
-\begin{table}[!t]
-\caption{Distinct SWNs and associated sets of \unravelled\ traces discovered from the Sepsis Cases event log.}\label{tab:dataset}
-\centering
- \begin{adjustbox}{width=.6\textwidth}
-	\begin{tabular}{crl||cl|c}
-		\toprule
-		\textbf{Experiment Conf.} $(\mathcal{U})$ & \textit{Model} & $+$\textit{W. Estimator} & $\pmin$& $\;\;|\WCal{\pmin}{n}(P_{\mathcal{U}})|$ \\
-		\midrule
-		
-		\textbf{SM\_CONS\_20} &SplitMiner 2.0  \cite{AugustoCDRP19}       & +\texttt{Constant} &  $\;\;0$ & $157$  \\
-		
-		\textbf{SM\_FORK\_20} & SplitMiner 2.0  \cite{AugustoCDRP19}      & +Fork \cite{spdwe} &  $\;\;0$ & $32$  \\
-		
-		
-		\textbf{SM\_PAIR\_20} & SplitMiner 2.0  \cite{AugustoCDRP19}      & +PairScale \cite{spdwe} &  $\;\;0$ & $157$ \\
-
-		\textbf{STPETRI\_20} & \multicolumn{2}{c||}{Rogge-Solti \cite{RoggeSoltiAW13}} &  $10^{-5}$ & $1612$ \\
-		\bottomrule
-	\end{tabular}
-\end{adjustbox}
-\vspace{-.8cm}
-\end{table}
+%\begin{table}[!t]
+%\caption{Distinct SWNs and associated sets of \unravelled\ traces discovered from the Sepsis Cases event log.}\label{tab:dataset}
+%\centering
+% \begin{adjustbox}{width=.6\textwidth}
+%	\begin{tabular}{crl||cl|c}
+%		\toprule
+%		\textbf{Experiment Conf.} $(\mathcal{U})$ & \textit{Model} & $+$\textit{W. Estimator} & $\pmin$& $\;\;|\WCal{\pmin}{n}(P_{\mathcal{U}})|$ \\
+%		\midrule
+%		
+%		\textbf{SM\_CONS\_20} &SplitMiner 2.0  \cite{AugustoCDRP19}       & +\texttt{Constant} &  $\;\;0$ & $157$  \\
+%		
+%		\textbf{SM\_FORK\_20} & SplitMiner 2.0  \cite{AugustoCDRP19}      & +Fork \cite{spdwe} &  $\;\;0$ & $32$  \\
+%		
+%		
+%		\textbf{SM\_PAIR\_20} & SplitMiner 2.0  \cite{AugustoCDRP19}      & +PairScale \cite{spdwe} &  $\;\;0$ & $157$ \\
+%
+%		\textbf{STPETRI\_20} & \multicolumn{2}{c||}{Rogge-Solti \cite{RoggeSoltiAW13}} &  $10^{-5}$ & $1612$ \\
+%		\bottomrule
+%	\end{tabular}
+%\end{adjustbox}
+%\vspace{-.8cm}
+%\end{table}
 %\begin{figure*}[!t]
 %\begin{minipage}{.49\textwidth}
 %	\includegraphics[width=1.1\textwidth]{images/Precision.png}
@@ -63,11 +63,11 @@ We assess our probabilistic trace alignment approach via the Sepsis Cases event 
 \footnote{{\small \texttt{\tiny https://data.4tu.nl/articles/dataset/Sepsis\_Cases\_-\_Event\_Log/12707639}}} 
 The dataset is partitioned into a training set with the ``\textit{happy traces}''  %lasting at most the average trace duration in the 
 %log ($\leq 2.3\cdot 10^{7}$ ms), 
-and a test set. The training set to generate an input reference model using  \cite{RoggeSoltiAW13,AugustoCDRP19}. %, which was then converted into a Petri net \cite{PPNFromLog} jointly
+and a test set. %The training set to generate an input reference model using  \cite{RoggeSoltiAW13,AugustoCDRP19}. %, which was then converted into a Petri net \cite{PPNFromLog} jointly
 %with firing weight estimators from \cite{spdwe} (\tablename~\ref{tab:dataset}). 
-We evaluated the benefits of the approximate-ranking strategy over optimal-ranking. First, we measured the level of 
-approximation by noticing a positive correlation between the ranking induced by both Optimal- and Approximate-Ranking Trace 
-Aligner via Spearman Correlation Index \cite{BergamiBM20}. We then benchmarked the proposed $k$NN queries by using 
-VP-Trees and KD-Trees for $k=20$. The approximation is beneficial when the model contains several traces to be aligned and, in 
-both alignment strategies, the computation time increases with the length of the traces to be aligned against the model traces. 
-Under such conditions, Approximate-Ranking Trace Aligner over KD-Trees outperforms all other strategies.
+Our preliminar evaluation suggested a positive Spearman correlation between the Optimal- and Approximate-Ranking \cite{BergamiBM20}, and suggested that the approximation is beneficial when the model contains several traces to be aligned and, in 
+both alignment strategies, the computation time increases with the length of the traces to be aligned against the model traces.
+
+\vspace*{-0.7cm}
+\subsubsection*{Acknowledgments}
+This research has been partially supported by the project IDEE (FESR1133) funded by the Eur.\ Reg.\ Development Fund (ERDF) Investment for Growth and Jobs Programme 2014-2020. 

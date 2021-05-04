@@ -1,0 +1,153 @@
+
+\documentclass[tikz]{standalone}
+
+\usetikzlibrary{arrows,shapes,automata,petri,positioning}
+\usepackage{xcolor}
+\input{tikz-macros}
+\usepackage{bpmn-events}
+\usepackage{bpmn-gateways}
+
+
+\tikzset {
+  mytask/.style={
+    task,
+    draw=marcofucsia3!100,
+    fill=marcofucsia3!10,
+    font=\scriptsize
+  }
+}
+
+
+\begin{document}
+	
+\begin{tikzpicture}[x=10.5mm,y=15mm,>=stealth',bend angle=45,auto,thick]
+	
+  \node (start) {};
+ 
+  \node[
+    ExclusiveGateway,
+    draw,
+  ] (loopjoin) at (1,0) {};
+    
+
+ 
+  \node[
+    ExclusiveGateway,
+    draw,
+  ] (aiskip) at (3,0) {};  
+  \node[
+    above right=-1.5mm of aiskip,
+    font=\scriptsize  
+  ] {\color{magenta}0.5};
+  \node[
+    below=2mm of aiskip,
+    xshift=-1mm,
+    anchor=west,
+    font=\scriptsize  
+  ] {\color{magenta}0.5};
+  
+    
+  \node[
+    mytask,
+    align=center,
+  ] (ai) at (4,0) {
+      \begin{tabular}{@{~}c@{}}
+        $\tcolor\textsf{add}$\\
+        $\tcolor\textsf{item}$
+      \end{tabular}
+    };
+
+  \node[
+    ExclusiveGateway,
+    draw,
+  ] (aijoin) at (5,0) {};
+
+  \node[
+    ExclusiveGateway,
+    draw,
+  ] (loopsplit) at (6,0) {};
+  \node[
+    below right=-2mm of loopsplit,
+    font=\scriptsize  
+  ] {\color{magenta}0.8};
+  \node[
+    above=2mm of loopsplit,
+    xshift=-1mm,
+    anchor=west,
+    font=\scriptsize  
+  ] {\color{magenta}0.2};
+
+  \node (end) at (7,0) {};
+
+  \draw[sequence] (start) -- (loopjoin);
+  \draw[sequence] (loopjoin) -- (aiskip);
+  \draw[sequence] (aiskip) -- (ai);
+  \draw[sequence,rounded corners=5pt] (aiskip) 
+      |-
+      ++(10mm,-15mm) 
+      -|  
+      (aijoin);
+  \draw[sequence] (ai) -- (aijoin);
+  \draw[sequence] (aijoin) -- (loopsplit);
+  \draw[sequence] (loopsplit) -- (end);
+  \draw[sequence,rounded corners=5pt] (loopsplit) 
+      |-
+      ++(-10mm,15mm) 
+      -|  
+      (loopjoin);
+
+  
+  \node (startnet) at (7,0) {};
+  \node[place] (penter) at (8,0) {};
+  \node[
+    tautrans,
+    label=below:$\tau$,
+    label=above:$\wcolor 1.0$,
+  ] (t1) at (9,0) {$t_1$};
+  \node[place] (ppi) at (10,0) {};
+  \node[
+    tasktrans,
+    label=below:$\tcolor\textsf{add item}$,
+    label=above:$\wcolor 0.5$,
+  ] (t2) at (11,0) {$t_2$};
+  \node[
+    tautrans,
+    label=below:$\tau$,
+    label=above:$\wcolor 0.5$,
+  ] (t3) at (11,-1) {$t_3$};
+  \node[
+    tautrans,
+    label=below:$\tau$,
+    label=above:$\wcolor 0.2$,
+  ] (t5) at (11,1) {$t_5$};
+  \node[place] (pai) at (12,0) {};
+  \node[
+    tautrans,
+    label=below:$\tau$,
+    label=above:$\wcolor 1.0$,
+  ] (t4) at (13,0) {$t_4$};
+  \node[place] (pl) at (14,0) {};
+  \node[
+    tautrans,
+    label=below:$\tau$,
+    label=above:$\wcolor 0.8$,
+  ] (t6) at (15,0) {$t_6$};
+  \node (end) at (16,0) {};
+
+  \draw[arc] (startnet) -- (penter);
+  \draw[arc] (penter) -- (t1);  
+  \draw[arc] (t1) -- (ppi);
+  \draw[arc] (ppi) -- (t2);
+  \draw[arc] (t2) -- (pai);
+  \draw[arc,rounded corners=5pt] (ppi) |- (t3);
+  \draw[arc,rounded corners=5pt] (t3) -| (pai);
+  \draw[arc] (pai) -- (t4);
+  \draw[arc] (t4) -- (pl);
+  \draw[arc,rounded corners=5pt] (pl) |- (t5);
+  \draw[arc,rounded corners=5pt] (t5) -| (penter);
+  \draw[arc] (pl) -- (t6);
+  \draw[arc] (t6) -- (end);
+
+\end{tikzpicture}
+	
+\end{document}

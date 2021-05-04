@@ -23,7 +23,7 @@
 \definecolor{marcogreen2}{RGB}{56,122,101}
 
 
-\newcommand{\tcolor}{\color{darkgreen}}
+\newcommand{\tcolor}{\color{marcofucsia3}}
 \newcommand{\wcolor}{\color{marcofucsia1}}
 \newcommand{\pcolor}{\color{violet}}
 
@@ -37,6 +37,16 @@
 		draw=acsiblue!90,
 		fill=acsiblue!10,
 		minimum size=6mm,
+	},
+    tasktrans/.style={
+        transition,
+		rectangle,
+		very thick,
+		fill=marcofucsia3!10,
+        draw=marcofucsia3!100,
+		minimum width=5mm,
+        minimum height=5mm,
+		inner ysep=2pt
 	},
 	transitionH/.style={
 		rectangle,
@@ -52,8 +62,11 @@
 		minimum height=6mm,
 		inner xsep=2pt
 	},
-    tau/.style={
-      fill=gray,
+    tautrans/.style={
+      tasktrans,
+      fill=black!100,
+      draw=black!100,
+      font=\color{white},
     },
     arc/.style={
         -angle 90,
