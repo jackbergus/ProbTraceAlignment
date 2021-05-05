@@ -53,7 +53,7 @@ Since each embedding $\phi$ entails an associated similarity metric $k_\phi$, an
 distance $d_{k_\phi}$,
 we can compute the embeddings for all the model traces
 before performing the top-$k$ search ensuring that they are independent of the trace to align, thus avoiding the brute-force cost. This computational gain comes with a loss in precision %, as the generation of precise embeddings for graph data with loops is an NP-Complete (thus intractable) problem
- \cite{GartnerFW03} and, in its approximated version, is not able to accurately represent the data using low-dimensional vectors \cite{Seshadhri5631}. %So, our proposed embedding (that we indicate with $\gorgembed$) is weakly-ideal.
+ \cite{BergamiBM20,GartnerFW03} and, in its approximated version, is not able to accurately represent the data using low-dimensional vectors \cite{Seshadhri5631}. %So, our proposed embedding (that we indicate with $\gorgembed$) is weakly-ideal.
 %Differently from some graph embedding literature, we are interested in neither embedding one single node of the graph, nor in providing a vector representation of the whole graph. While these are common strategies for graph embeddings,
 Our aim is to represent model traces,  which might be composed by different valid sequences (paths), as vectors.  We are also interested in the intersection of embedding strategies for whole node-labeled graphs with string embedding traces, as we use vectors to compare model traces with log traces.
 {To obtain our proposed embedding $\gorgembed$, we hence adapt the  embedding strategy} $\trembed$ from \cite{LodhiSSCW02} {by addressing some short\-comings: %that this strategy presents:}
@@ -103,7 +103,7 @@ Since a model trace embedding, in our tool, requires an intermediate representat
 %	
 \begin{figure}[!t]
 	\centering
- \includegraphics[width=.6\textwidth]{images/closed_example.pdf}
+ \includegraphics[width=.4\textwidth]{images/closed_example.pdf}
 \caption{An example of a Transition Graph.}\label{fig:closedd}
 \end{figure}
 
