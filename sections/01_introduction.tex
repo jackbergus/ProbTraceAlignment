@@ -25,15 +25,15 @@ With reference to Figure~\ref{fig:bpmn-order}, a user might be interested in ali
 %However, in some cases, the user could prefer to identify an alignment with a lower cost even if based on a less probable model trace, while, in other cases, the user could favor a model trace with a higher probability at the expense of a higher alignment cost. Therefore, to provide users with an instrument that allows them to find their own trade-off between alignment cost and model trace probability, we need to return the best $k$ alignments among all the distinct model traces.
 %Since when aligning an event log with a stochastic net distinct model traces have different probabilities, the retrieval of the best model trace maximizing the combined provision of minimum trace alignment cost and maximum model trace probability might not suffice. In some cases, indeed, the user could prefer to identify an alignment with a lower cost even if based on a less probable model trace, while, in other cases, the user could favor a model trace with a higher probability at the expense of a higher alignment cost. We consider, therefore, the important tradeoff between both aspects.
 %Therefore, in this paper, we propose trace alignment approaches that return the best
-To do this, we frame the probabilistic trace alignment problem into the well-known $k$-Nearest Neighbors ($k$NN) problem \cite{Altman} that refers to finding the $k$ nearest data points to a \textit{query} $x$ from a set $\mathcal{X}$ of \textit{data points} via a distance function defined over $\mathcal{X}\cup\{x\}$.
+To achieve this, we frame the probabilistic trace alignment problem into the well-known $k$-Nearest Neighbors ($k$NN) problem \cite{Altman} that refers to finding the $k$ nearest data points to a \textit{query} $x$ from a set $\mathcal{X}$ of \textit{data points} via a distance function defined over $\mathcal{X}\cup\{x\}$.
 We introduce two ranking strategies. The first one is based on a brute force approach that reuses existing trace aligners  \cite{LeoniM17} %, where the (optimal) ranking of the top-k alignments is obtained by computing the Levensthein distance between the trace to be aligned and all the model traces and by multiplying each of these distances by the probability of the corresponding model trace. However, even if this approach returns the best trace alignment ranking for a query trace,
 requiring to re-compute the alignments for all possible traces in the log. For models generating a large number of model traces, this clearly becomes inefficient. Therefore, we propose a second strategy that produces an approximate ranking where $x$ and $\mathcal{X}$ are represented as numerical vectors via an embedding $\phi$.
   %{Then, by exploiting ad-hoc data structures,
 %such as Vp-Trees \cite{Fu2000}, Kd-Trees \cite{Maneewongvatana99}, and M-Trees \cite{Ciaccia},
 %we can retrieve the neighborhood of $x$ in $\mathcal{X}$ of size $k$  by pre-ordering (\textit{indexing}) $\mathcal{X}$  via a distance between the numerical vectors obtained using $\phi$.
 %Thus, we do not need to analyze the entire space, but just start the search from the top-$1$ alignment.
-If the embeddings $\phi$ for $\mathcal{X}$ are independent of the query of choice $x$, this does not require to constantly recompute the numeric vector representation for $\mathcal{X}$ and to pre-order it to efficiently visit the search space. We implemented and tested our solution
-\footnote{{\small \texttt{\tiny https://github.com/jackbergus/approxProbTraceAlign}}}.
+If the embedding $\phi$ for $\mathcal{X}$ is independent of the query of choice $x$, this does not require to constantly recompute the numeric vector representation for $\mathcal{X}$ and to pre-order it to efficiently visit the search space. The tool is publicly available.
+\footnote{\texttt{https://github.com/jackbergus/approxProbTraceAlign}}
 
 %\begin{figure}[!t]
 %	\centering
@@ -48,22 +48,22 @@ If the embeddings $\phi$ for $\mathcal{X}$ are independent of the query of choic
 
 \begin{figure}[!t]
 	\centering
-	\includegraphics[width=.8\textwidth]{images/bpmn-order}
+	\includegraphics[width=.9\textwidth]{images/bpmn-order}
 	\caption{A simple order management process in BPMN, with choice probabilities.}\label{fig:bpmn-order}
 \end{figure}
 \begin{figure}[!t]
 		\centering
-	\includegraphics[width=.8\textwidth]{images/petri_order}
+	\includegraphics[width=.9\textwidth]{images/petri_order}
 	\caption{Encoding of the BPMN diagram in Figure~\ref{fig:bpmn-order} using a stochastic Workflow net with bounded silence.}\label{fig:petri_tut}
 \end{figure}
 \begin{figure}[!t]
 	\centering
-	\includegraphics[width=.99\textwidth]{images/skip-iteration}
+	\includegraphics[width=1.0\textwidth]{images/skip-iteration}
 	\caption{A process model with a loop accepting fully silent iterations.}\label{fig:skip-iteration}
 \end{figure}
 \begin{figure}[!t]
 	\centering
-	\includegraphics[width=.99\textwidth]{images/skip-step}
+	\includegraphics[width=1.0\textwidth]{images/skip-step}
 	\caption{A process model with a loop accepting iterations with skippable steps.}\label{fig:skip-step}
 \end{figure}
 
