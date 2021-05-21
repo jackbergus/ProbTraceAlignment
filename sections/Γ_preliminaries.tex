@@ -1,4 +1,101 @@
 \section{Preliminary Definitions}
-\subsection{Stochastic Workflow Networks}
+\subsection{Stochastic Workflow Networks}\label{subsec:spn}
+%As customary in probabilistic conformance checking \cite{DBLP:conf/bpm/LeemansSA19,DBLP:conf/icpm/PolyvyanyyK19,DBLP:journals/tosem/PolyvyanyySWCM20}, we adopt stochastic Petri nets \cite{MarsanCB84,RoggeSoltiAW13} as the underlying formal basis to represent processes. More specifically, we consider an interesting class of stochastic Petri nets with only immediate transitions (i.e., no timed ones).
+%We assume to have a set $\alphabet = \tasks \cup \set{\tau}$ of labels, where labels in $\tasks$ indicate process tasks, whereas $\tau$ indicates an invisible execution step ($\tau$-transition). A \emph{trace} is a finite sequence of labels from $\tasks$. An \emph{untimed Stochastic Workflow Net (\uswn)}
+%is a tuple $\net = (P,T,F,\ell,W)$ where:
+%\textit{(i)} $(P,T,F)$ is a standard \emph{Workflow net} with places $P$, transitions $T$, and flow relation $F$ such that there is exactly one \emph{input place} with no incoming arc, and exactly one \emph{output place} with no outgoing arcs;
+%\textit{(ii)} $\ell: T \rightarrow \alphabet$ is a \emph{labeling function} mapping each transition $t \in T$ into a label $\ell(t) \in \alphabet$;
+%\textit{(iii)} $W\colon T\to \mathbb{R}^+$ is a \emph{weight function} assigning a positive firing weight to each transition.
+%
+%\texttt{[TODO: describe the notion of marking]}
+%
+%By interpreting concurrency by interleaving, we can represent all transition firings of an \uswn, together with their probabilities, in a reachability graph  $(M,E,P)$ where
+%\textit{(i)} $M$ is the set of all reachable markings from the initial markings,
+%\textit{(ii)} $E \subseteq M \times \alphabet \times M$ is a $\alphabet$-\emph{labeled transition relation} induced by $\net$, that is, for $\marking,\marking' \in M$, we have edge $(\marking,a,\marking') \in E$ if and only if there exists transition $t$ in $\net$ with label $\ell(t) = a$ and such that $\fire{\marking}{t}{\marking'}{\net}$, and
+%\textit{(iii)} $P:E \rightarrow [0,1]$ is the \emph{transition probability} function assigning to each transition $(\marking,a,\marking') \in E$ its corresponding probability, obtained from the firing probability of the \uswn transition(s) that lead from $\marking$ to $\marking'$ and are labeled by $a$. 
+In this paper, we consider a specific case of Stochastic Petri Nets, such as Workflow Networks over $k$-bounded Place-Transitions Nets \cite{MarsanCB84,Desel1998,RoggeSoltiAW13}. Those Stochastic Petri Nets can be modelled as a tuple $SPN=(P,T,F,\omega,W,i,f)$ where:
+\begin{mylist}
+	\item $P$ is a set of \textit{places} to which we can associate a finite number of indistinguishable tokens;
+	\item $T$ is a set of \textit{transitions} $t\in T$, to which we associate a label $\lambda(t)\in\Sigma$;
+	\item $F\subseteq (P\times T)\cup (T\times P)$ is a set of arcs to which we associate a \textit{firing cost} $\omega\colon F\to\mathbb{N}$;
+	\item $W\colon T\to \mathbb{R}$ defines a \textit{firing weight} associated to each transition;
+	\item The initial place $i\in P$ has no ingoing edges ($\not\exists t\in T. (t,i)\in F$);
+	\item The final place $f\in P$ has no outgoing edges ($\not\exists t\in T. (f,t)\in F$).
+\end{mylist}
+A \textit{marking} is an assignment of a given amount of indistinguishable tokens to places described by a vector $M\colon P\to \mathbb{N}$. We say that a given transition $t$ is \textit{enabled} if $M(p)\geq \omega(p,t)$ for each ingoing $p$ to $t$ ($(p,t)\in F$). If such transition is enabled, then it can \textit{fire} a token. The set of the \textit{enabling transitions} $E(M)$ for a given marking $M$ are all the $t$ reachable from $p$ ($(p,t)\in F$) with $M(p)\neq 0$ where $t$ is enabled. When $t$ can fire a token for a marking $M$, we can generate a novel marking $M'$ from $M$ by moving the tokens from the ingoing places towards the outgoing places as 
+$\forall p\in P.\; M'(p)=M(p)-[\omega(p,t)]+[\omega(t,p)]$. 
+We denote the transition from marking $M$ to marking $M'$ via an enabling $t$ as a relation $M\overset{t}{\to}M'$. Given an initial marking $M$ for a Stochastic Petri Net $SPN$,  the \textit{Reachability Graph} for $SPN$ is a graph $(\mathcal{M},\mathcal{E})$ where the nodes  $\mathcal{M}$ are composed of of all the reachable markings from $M$, $M$ included, and all the edges $\mathcal{E}$ are induced by the aforementioned relation $M\overset{t}{\to}M'$ among the reachability graph's nodes. To each of such edges $M\overset{t}{\to}M'$, we associate a transition probability $\mathbb{P}\left(M\overset{t}{\to}M'\right)=\frac{W(t)}{\sum_{t'\in E(M)}W(t')}$ \cite{spdwe}. We say that a SPN with initial marking $M$ is $k$-\textit{bounded} if each of the nodes $M$ in the reachability graph have $\forall p\in P.\; M(p)\leq k$\\
 
-\subsection{Graph and String Kernels}
+\subsection{Graph and String Kernels}\label{subsec:katk}
+
+\paragraph*{Kernels.} As a foundational basis to compute trace alignments, we adapt similarity measures from the database literature.  Given a set of data examples $\mathcal{X}$, (e.g., strings or traces, transition graphs) a (positive definite) \emph{kernel} function $k\colon \mathcal{X}\times \mathcal{X}\to \mathbb{R}$ denotes the similarity of elements in $\mathcal{X}$. If $\mathcal{X}$ is the $d$-dimensional Euclidean Space $\mathbb{R}^d$, the simplest kernel function is the inner product $\Braket{\mathbf{x},\mathbf{x}'}=\sum_{1\leq i\leq d}\mathbf{x}_i\mathbf{x}'_i$.
+A kernel is said to \emph{perform ideally} \cite{Gartner03} when $k(x,x')=1$ whenever $x$ and $x'$ are the same object (\textit{strong equality}) and $k(x,x')=0$ whenever $x$ and $x'$ are distinct objects (\textit{strong dissimilarity}). A kernel is also said to be \emph{appropriate} when similar elements $x,x'\in\mathcal{X}$ are also close in the feature space. Notice that appropriateness can be only assessed  empirically \cite{Gartner03}.
+A positive definite kernel induces a distance metric as:
+\begin{equation}\label{eq:dofk}
+d_k(\mathbf{x},\mathbf{x}'):=\sqrt{k(\mathbf{x},\mathbf{x})-2k(\mathbf{x},\mathbf{x}')+k(\mathbf{x}',\mathbf{x}')}
+\end{equation}
+When the kernel of choice is the inner product, the resulting distance is the Euclidean distance $\norm{\mathbf{x}-\mathbf{x}'}{2}$. A normalized vector $\hat{\mathbf{x}}$ is defined as $\mathbf{x}/\norm{\mathbf{x}}{2}$. For a normalized vector we can easily prove that: $\norm{\hat{\mathbf{x}}-\hat{\mathbf{x}}'}{2}^2=2(1-\Braket{\hat{\mathbf{x}},\hat{\mathbf{x}}'})$.
+When $\mathcal{X}$ does not represent directly a $d$-dimensional Euclidean space, we can use an \emph{embedding} $\embed\colon\mathcal{X}\to \mathbb{R}^d$ to define a kernel $k_\embed\colon \mathcal{X}\times \mathcal{X}\to\mathbb{R}$ as $k_\embed(x,x'):=\Braket{\embed(x),\embed(x')}$. As a result, $k_\embed(x,x')=k_\embed(x',x)$ for each $x,x'\in\mathcal{X}$.
+
+
+\paragraph*{Graph Kernels.} Graph kernels express similarity measures \cite{Samatova} involved in both classification \cite{TsudaS10} and clustering algorithms. One of the first approaches required a preliminary embedding definition of topological description vectors extracted from the most frequent subgraphs within a graph database \cite{Sidere}. As a drawback, it required the computation of a subgraph isomorphism problem, which is NP-complete. In fact, the definition of a graph kernel function fully recognizing the structure the graph always boils down to solving such NP-Complete problem \cite{GartnerFW03}, as exact embeddings generable in polynomial can be inferred just for loop-free Direct Acyclic Graphs \cite{BergamiBM20}. Consequently, most recent literature focused on extracting relevant features of such graphs, that are then used to define a graph similarity function. The most common approach adopted in the kernel to extract such features is called \textit{propositionalization}: we might extract all the possible features (e.g., subsequences), and then define a kernel function based on the occurrence and similarity of these features \cite{Gartner03}.
+
+\paragraph*{String Kernels.} The literature also provides a kernel representation for strings \cite{LodhiSSCW02,GartnerFW03}: if we associate each dimension in $\mathbb{R}^d$ to a different sub-string $\alpha\beta$ of size $2$ (i.e., $2$-grams\footnote{\label{fn:caveat}For our experiments, we choose to consider only $2$-grams, but any $p$-grams of arbitrary length $p\geq 2$ might be adopted \cite{Gartner03}. An increased size of $p$ improves precision but also incurs in a worse computational complexity, as it requires to consider all the arbitrary subtraces of length $p$ whose constitutive elements occur at any distance from each other within the trace.}), it should represent how frequently and ``compactly'' this subtrace is embedded in the trace $\trace$ of interest. Therefore, we introduce a \emph{decay factor} $\lambda\in[0,1]\subseteq\mathbb{R}$ that, for all $m$ sub-strings where $\alpha$ and $\beta$ appear in $\trace$ at the same relative distance $L < |\trace|$, weights the resulting embedding as $\lambda^Lm$.
+
+
+
+\begin{table}[t!]
+	\vspace{+0.7cm}
+	\caption{Embedding of traces $\const{caba}$, $\const{caa}$ and $\const{cb}$.}\label{tb:embedding}
+	\vspace{-0.4cm}
+	\begin{center}
+		%\scalebox{0.6}
+		{
+			\begin{tabularx}{\textwidth}{
+					>{\hsize=.1\hsize}X
+					>{\hsize=.2\hsize}X
+					>{\hsize=.1\hsize}X
+					>{\hsize=.1\hsize}X
+					>{\hsize=.1\hsize}X
+					>{\hsize=.1\hsize}X
+					>{\hsize=.1\hsize}X
+					>{\hsize=.25\hsize}X
+					>{\hsize=.2\hsize}X
+					>{\hsize=.1\hsize}X
+				}
+				\toprule
+				& $\const{aa}$    & $\const{ab}$   & $\const{ac}$    & $\const{ba}$   & $\const{bb}$   & $\const{bc}$ & $\const{ca}$ & $\const{cb}$ & $\const{cc}$   \\
+				\midrule
+				$\const{caba}$ & $\lambda^2$ & $\lambda$ & $0$ & $\lambda$  & $0$  & $0$ & $\lambda+\lambda^3$ & $\lambda^2$ & $0$\\
+				%$\const{caaa}$ & $2\lambda+\lambda^2$& $0$ & $0$ & $0$ & $0$ & $0$ & $\lambda+\lambda^2+\lambda^3$ & $0$ & $0$ \\
+				$\const{caa}$  & $\lambda$ & $0$ & $0$ & $0$ & $0$ & $0$ & $\lambda+\lambda^2$ & $0$&  $0$\\
+				$\const{cb}$   & $0$ & $0$ & $0$ & $0$ & $0$ & $0$ & $0$ & $\lambda$& $0$ \\
+				\bottomrule
+			\end{tabularx}
+		}
+		\vspace{-0.3cm}
+	\end{center}
+\end{table}
+\begin{example}\label{ex:wheredotiszero} %\small
+	Consider tasks $\tasks=\Set{a,b,c}$. The possible 2-grams over $\tasks$ are $\tasks^2=\Set{\const{aa},\const{ab},\const{ac},\const{ba},\const{bb},\const{bc},\const{ca},\const{cb},\const{cc}}$. Table~\ref{tb:embedding} shows the embeddings of some traces. Being a 2-gram, trace $\const{cb}$ has only one nonzero component, namely that corresponding to itself, with $\trembed_{\const{cb}}(\const{cb})=\lambda$. Trace $\const{caa}$ has the 2-gram $\const{ca}$ occurring with length $1$ ($\const{\underline{ca}a}$) and $2$ ($\const{\underline{c}a\underline{a}}$), and the 2-gram $\const{aa}$ with occurring length $1$ ($\const{c\underline{aa}}$). Hence: $\trembed_{\const{ca}}(\const{caa})=\lambda+\lambda^2$ and  $\trembed_{\const{aa}}(\const{caa})=\lambda$.  Similar considerations can be carried out for the other traces in the table.
+	We now want to compute the similarity between the first trace $\const{caba}$ and the other two traces. To do so, we sum, column by column (that is, 2-gram by 2-gram) the product of the embeddings for each pair of traces. We then get $k_{\trembed}(\const{caba},\const{caa})=\lambda^3+(\lambda+\lambda^3)(\lambda+\lambda^2)$ and $k_{\trembed}(\const{caba},\const{cb})=\lambda^3
+	$,
+	%{\footnotesize
+	%\[
+	%k_{\trembed}(\const{caba},\const{caaa})=\lambda(\lambda+\lambda^2+\lambda^3)
+	%~~
+	%k_{\trembed}(\const{caba},\const{caa})=\lambda(\lambda+\lambda^2)
+	%~~
+	%k_{\trembed}(\const{caba},\const{cb})=\lambda(\lambda+\lambda^3)
+	%\]}
+	which induces ranking $
+	k_{\trembed}(\const{caba},\const{caa})>
+	k_{\trembed}(\const{caba},\const{cb})
+	$.
+\end{example}
+
+\endinput
+
+
+
+

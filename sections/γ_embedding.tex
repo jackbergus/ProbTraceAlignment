@@ -1,0 +1,22 @@
+% !TeX root=../main.tex
+
+%\subsection{Computation pipeline}
+\textbf{Alignment Strategy.}\label{subsec:as}
+%Our technique is realized through the pipeline shown in \figurename~\ref{fig:pipe}, consisting of the following steps.
+%
+%In step 1, the reachability graph $\rg{\net}$ of $\net$ is constructed.
+%
+%In step 2,  
+%$\closed{\tg_{\rg{\net}}}$ preserves model traces and their probabilities while working only over visible tasks in $\tasks$;
+% this transition graph is unraveled c we apply a probabilistic alignment technique that ranks all such model traces according to their probability and their similarity to $\trace$.
+%
+%The pipeline has the following phases: after representing the USWN as a graph of all the sequentially scheduled transitions
+%(\S\ref{sec:seqZ}), we shift the labels from the edges towards the nodes while preserving the set of probabilistic traces
+%(\S\ref{sec:LSift}) and minimize the graph representation by removing the $\tau$-labeled nodes while preserving the
+%trace probability (\S\ref{sec:clos}).
+The last step takes the so-obtained TG-traces and ranks the best $k$ by considering their probabilities and the alignment cost with the trace $\trace$ of interest. %In \figurename~\ref{fig:pipe}, this is shown as a black-box. %As we describe in detail next, we have implemented this last step in two alternative ways: one computationally demanding but guaranteeing to produce an optimal ranking, the other more efficient but providing approximate ranking without optimality guarantees.
+%\todo{Ho tagliato la descrizione che c'era dopo. Al limite la incorporerei nella rispettiva sottosezione.}
+%We later discuss how to rank traces in the exact and approximated scenarios by reducing the alignment process to a k-nearest
+%neighbour problem. While the exact trace alignment requires to perform the alignment process each time a novel trace $\sigma^*$ is
+%introduced (\S\ref{subsec:exbkptap}), the approximated alignment can split the alignment into a preliminary loading phase and a
+%query phase. In the former, each stochastic trace from the USWN is represented as a vector (\S\ref{subsec:ate}), and in the latter the to-be-aligned trace $\sigma^*$ is first represented as a vector and then compared to all the other vectorial representations.
