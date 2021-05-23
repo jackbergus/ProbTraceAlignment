@@ -1,54 +1,56 @@
 \section{Alignment Strategy}\label{subsec:as}
+
 When aligning a log trace with a TG, retrieving the model trace maximizing the combined provision of minimum trace alignment cost 
 and maximum model trace probability does not suffice.
-Hence, we find the best $k$ alignments among all  model traces in $\ptraces{\tg}{\pmin}$. This reduces to the
+Hence, we find the best $k$ alignments among all  model traces in $\ptraces{\net}{\pmin}$. This reduces to the
 $k$-nearest neighbors ($k$NN) problem by finding the $k$ nearest data points to a \textit{query} $x$ from a set 
 $\mathcal{X}$ of \textit{data points} w.r.t.\ a given distance function $d_k$. Through ad-hoc data structures, such as VP-Trees 
 and KD-Trees, %VP-Trees \cite{Fu2000} \cite{Maneewongvatana99}, and M-Trees \cite{Ciaccia},
-we can retrieve the $k$-neighborhood of $x$ in $\mathcal{X}$ by pre-ordering (\textit{indexing}) $\mathcal{X}$ w.r.t.\ $d_k$. 
+we can retrieve the $k$-neighborhood of $x$ in $\mathcal{X}$ by pre-ordering (\textit{indexing}) $\mathcal{X}$ with respect to $d_k$. 
 %and searching from the top-$1$ alignment.
 %
 %To align a trace $\logtrace$ over the \unravelled\ traces $\ptraces{\tg}{\pmin}$,
 %the $k$-Nearest Neighbors describe the best $k$ alignments for $\logtrace$. 
-We discuss two strategies to obtain these
-alignments.
+%We discuss two strategies to obtain these
+%alignments.
 
 \smallskip
 \noindent
 \textbf{Optimal-Ranking Trace Aligner.}
-One approach is to reuse existing trace aligners; e.g., \cite{DBLP:conf/edoc/AdriansyahDA11,LeoniM17} over the Levenshtein 
-distance.
-Using decision theory \cite{dectheor}, we express the ranking score as the product 
-$\probskip{\nonlogtrace} d(\logtrace,\nonlogtrace)$, taking into account the cost of the alignment (the distance between 
-the model trace and the trace to be aligned) and the probability of the model trace.
+One approach is to reuse existing trace aligners and compute the alignment cost for each model trace $\nonlogtrace$ to be aligned with a model trace at a time $\logtrace$. Customary alignments \cite{DBLP:conf/edoc/AdriansyahDA11,LeoniM17} can be efficiently computed via string Levenshtein distance $d(\logtrace,\nonlogtrace)$: therefore, we will consider traces as strings with associated probability values. Given that similarity is the inverse function of distance and that, concerning the alignment task, we want to find the model trace maximizing both probability and similarity with the log trace, the problem boils down to maximizing the product $p\cdot s$, where $p=\prob{\logtrace}{\mathcal{L}}\prob{\nonlogtrace}{\net}=\prob{\nonlogtrace}{\net}$ and $s=\frac{1}{\frac{1}{c}d(\logtrace, \nonlogtrace)+1}$, where $c\in\mathbb{N}_{\neq 0}$ is a constant. We refer to $p\cdot s$ as the golden ranking function denoted as $\mathcal{R}(\logtrace,\nonlogtrace)$.
 
-To represent the same intuition of a weighted distance as a ranking function, we transform it into a
-similarity function returning $1$ when $\nonlogtrace=\logtrace$ and $\probskip{\logtrace}=1$ hold. We express $d$ as
-a normalized similarity score $s_d(\logtrace,\nonlogtrace):=\frac{1}{\frac{1}{c}d(\logtrace,\nonlogtrace)+1}$, where  
-$c\in\mathbb{N}_{\neq0}$ is a constant. The maximum similarity is reached when the distance is $0$ and the similarity decreases 
-as the distance increases. 
-The golden ranking function producing the optimal ranking is 
-$\goldenrank(\logtrace,\nonlogtrace)=\probskip{\nonlogtrace} \probskip{\logtrace} s_d(\logtrace,\nonlogtrace)$;
-${\max\arg}_{\nonlogtrace\in \WCal{\pmin}{n}} \goldenrank(\logtrace,{\nonlogtrace})$ yields the best optimal-ranking trace 
-alignment for a log trace $\logtrace$, where $\goldenrank$ must be computed anew for each possible $\logtrace$. 
-{We can represent each trace as a point  $(\mathbb{P}_N(\sigma)\mathbb{P}_N(\sigma'),\; s_d(\sigma,\sigma'))$ in the 
-	2-dimensional similarity/probability space of coordinates $(p,s)$, reducing the trace finding problem to maximising the product 
-	$p\cdot s\equiv \mathbb{P}_N(\sigma)\mathbb{P}_N(\sigma')\cdot s_d(\sigma,\sigma')$ (Figure \ref{fig:sps}).}
+
+%Using decision theory \cite{dectheor}, we express the ranking score as the product 
+%$\probskip{\nonlogtrace} d(\logtrace,\nonlogtrace)$, taking into account the cost of the alignment (the distance between 
+%the model trace and the trace to be aligned) and the probability of the model trace.
 %
-\begin{figure}[!t]
-	\centering
-	\vspace{-4mm}
-	\subfloat{\label{fig:spp}\includegraphics[width=.248\textwidth]{images/original_space.pdf}}
-	\subfloat{\label{fig:knnspace}\includegraphics[width=.248\textwidth]{images/transformed_space.pdf}}\\
-	\caption{Two characterizations of probabilistic trace alignment; the similarity/probability space left, and the transformed
-		$k$NN space right. The best possible match is shown in red in both spaces.}\label{fig:sps}
-\end{figure}
+%To represent the same intuition of a weighted distance as a ranking function, we transform it into a
+%similarity function returning $1$ when $\nonlogtrace=\logtrace$ and $\probskip{\logtrace}=1$ hold. We express $d$ as
+%a normalized similarity score $s_d(\logtrace,\nonlogtrace):=\frac{1}{\frac{1}{c}d(\logtrace,\nonlogtrace)+1}$, where  
+%$c\in\mathbb{N}_{\neq0}$ is a constant. The maximum similarity is reached when the distance is $0$ and the similarity decreases 
+%as the distance increases. 
+%The golden ranking function producing the optimal ranking is 
+%$\goldenrank(\logtrace,\nonlogtrace)=\probskip{\nonlogtrace} \probskip{\logtrace} s_d(\logtrace,\nonlogtrace)$;
+%${\max\arg}_{\nonlogtrace\in \WCal{\pmin}{n}} \goldenrank(\logtrace,{\nonlogtrace})$ yields the best optimal-ranking trace 
+%alignment for a log trace $\logtrace$, where $\goldenrank$ must be computed anew for each possible $\logtrace$. 
+%{We can represent each trace as a point  $(\mathbb{P}_N(\sigma)\mathbb{P}_N(\sigma'),\; s_d(\sigma,\sigma'))$ in the 
+%	2-dimensional similarity/probability space of coordinates $(p,s)$, reducing the trace finding problem to maximising the product 
+%	$p\cdot s\equiv \mathbb{P}_N(\sigma)\mathbb{P}_N(\sigma')\cdot s_d(\sigma,\sigma')$ (Figure \ref{fig:sps}).}
+%
+%\begin{figure}[!t]
+%	\centering
+%	\vspace{-4mm}
+%	\subfloat{\label{fig:spp}\includegraphics[width=.5\textwidth]{images/original_space.pdf}}
+%	\subfloat{\label{fig:knnspace}\includegraphics[width=.5\textwidth]{images/transformed_space.pdf}}\\
+%	\caption{Two characterizations of probabilistic trace alignment; the similarity/probability space left, and the transformed
+%		$k$NN space right. The best possible match is shown in red in both spaces.}\label{fig:sps}
+%\end{figure}
 
 
 \begin{table}[!t]
 	\vspace{5mm}
 	\centering
-	\caption{Golden ranking of $\ptraces{\closed{\tg}}{0}$ with maximum length $4$, where $\logtrace=\const{caba}$ and $c=5$.}\label{tab:expected}
+	\caption{Golden ranking of model traces with maximum length $4$, where $\logtrace=\const{caba}$ and $c=5$.}\label{tab:expected}
 	\resizebox{.45\textwidth}{!}{\begin{tabular}{lc|ll|c}
 			\toprule
 			
@@ -87,20 +89,22 @@ alignment for a log trace $\logtrace$, where $\goldenrank$ must be computed anew
 	return the best $k$ solutions.
 	We reduce the problem to $k$NN over the Euclidean Space through a transformation $t$ such that the distance of the 
 	transformed point $t(p,s)$ from  the origin $\vec{0}$ is $\sfrac{1}{ps}$. This preserves the score from the golden ranking 
-	and maps the points maximizing $ps$ close to the origin. We choose}
+	and maps the points maximizing $ps$ close to the origin, but it requires to recompute the transformation for each new log trace $\logtrace$. We choose}
 $t(p,s):=\left(\frac{1}{s\sqrt{p^2+s^2}},\; \frac{1}{p\sqrt{p^2+s^2}}\right)$. 
 Our search always starts from the origin, and hence finds the best candidates first.
-
 %
-\begin{example}
-	{Figure \ref{fig:sps} (above) shows a family of hyperbolae $ps$ with all the alignments having 
-		$\mathcal{R}(\sigma,\sigma')=ps$. Point $(1,1)$ is the best possible trace match, i.e., a trace 
-		$\nonlogtrace\in\ptraces{G}{0}$ with $\nonlogtrace=\logtrace$ and $\mathbb{P}_G(\nonlogtrace)\mathbb{P}_G(\logtrace)=1$.
-		%		
-		Figure \ref{fig:knnspace} (below) shows that the embedding moves the points of the hyperbola $ps$ to a circumference $x^2+y^2=\sfrac{1}{(ps)^2}$ describing a locus of the points equidistant as $\sfrac{1}{ps}$ from the origin of the axes $(0,0)$.}
-\end{example}
+%\begin{example}
+	{Given a family of hyperbolae $p\cdot s$ with all the alignments having 
+		$\mathcal{R}(\sigma,\sigma')=p\cdot s$. 
+%		Point $(1,1)$ is the best possible trace match, i.e., a trace 
+%		$\nonlogtrace\in\ptraces{G}{0}$ with $\nonlogtrace=\logtrace$ and $\mathbb{P}_G(\nonlogtrace)\mathbb{P}_G(\logtrace)=1$.
+%		%		
+%		Figure \ref{fig:knnspace} (below) shows that 
+%		
+	the embedding moves the points of the hyperbola $p\cdot s$ to a circumference $x^2+y^2=\sfrac{1}{(ps)^2}$ describing a locus of the points equidistant as $\sfrac{1}{ps}$ from the origin of the axes $(0,0)$.}
+%\end{example}
 %
-The transformation required for running the $k$NN algorithm preserves the ranking induced by $\mathcal{R}$.
+The transformation required for running the $k$NN algorithm preserves the golden ranking.
 
 \begin{lemma}
 	\label{lem:transfspace}
@@ -110,101 +114,132 @@ The transformation required for running the $k$NN algorithm preserves the rankin
 
 \noindent
 \textbf{Approximate-Ranking Trace Embedder.}\label{subsec:ate}
-Ranking optimality comes at the cost of a brute-force recomputation of $\goldenrank$ for each trace $\logtrace$ to align.
-Each embedding $\phi$ entails an associated similarity metric $k_\phi$ (\S\ref{subsec:katk}) and an associated
-distance $d_{k_\phi}$ (Equation \ref{eq:dofk}), hence we can compute the embeddings for all the \unravelled\ traces
-before the top-$k$ search ensuring that they are independent of the trace to align, avoiding the brute-force cost. 
-This computational gain comes with a loss in precision; the generation of precise embeddings for graph data with loops is 
-NP-complete \cite{GartnerFW03}. %and, in its approximated version, is unable to accurately represent data using low-dimensional 
-%vectors \cite{Seshadhri5631}. 
-Our proposed embedding ($\gorgembed$) is thus weakly-ideal (\S\ref{subsec:katk}).
+Ranking optimality comes at the cost of a brute-force recomputation of $\goldenrank$ for each trace $\logtrace$ to align. Alternatively, we might avoid the brute-force cost by
+%Each embedding $\phi$ entails an associated similarity metric $k_\phi$ (\S\ref{subsec:katk}) and an associated
+%distance $d_{k_\phi}$ (Equation \ref{eq:dofk}), hence 
+%we can compute 
+computing the embeddings for all the \unravelled\ traces
+before the top-$k$ search ensuring that they are independent of the trace to align. %, avoiding the brute-force cost. 
+%As previously observed, 
+This computational gain comes with a loss in precision, that our embedding proposal tries to mitigate by overcoming some of the current literature shortcomings: 
+%; the generation of precise embeddings for graph data with loops is 
+%NP-complete \cite{GartnerFW03}. %and, in its approximated version, is unable to accurately represent data using low-dimensional 
+%%vectors \cite{Seshadhri5631}. 
+%Our proposed embedding ($\gorgembed$) is thus weakly-ideal (\S\ref{subsec:katk}).
+%%
+%$\gorgembed$ is a variant of the embedding $\trembed$ from \cite{LodhiSSCW02}, which addresses some of its shortcomings.
+%Indeed, $\trembed$
+%\begin{alphalist}
+%	\item is not weakly-ideal, so we cannot numerically assess if two embeddings represent equivalent traces 
+%	(Example \ref{ex:wheredotiszero});
+%	\item does not characterize $\tau$-moves, so the probabilities of the initial and final $\tau$-moves are not preserved; and
+%	\item is affected by numerical errors from finite arithmetics: longer traces $\nonlogtrace$ generated from skewed probability 
+%	distributions $G.\Lambda^i$ yield greater truncation errors, as smaller $\lambda^i$ components for bigger 
+%	$i<|\nonlogtrace|$ are ignored, preventing a complete numerical vector characterization of  $\nonlogtrace$ in practice.
+%\end{alphalist}
+%%
+%To overcome these shortcomings we 
+	 propose a weakly-ideal embedding
+ preserving probabilities from and to $\tau$ transitions, and 
+ mitigating the numerical truncation errors induced by trace length and probability distribution skewness through two 
+sub-embedding strategies, $\epsilon$ for transition correlations in $\tasks^2$ and $\nu$ for transition label frequency in $\tasks$\cite{Bergami21}. 
 %
-$\gorgembed$ is a variant of the embedding $\trembed$ from \cite{LodhiSSCW02}, which addresses some of its shortcomings.
-Indeed, $\trembed$
-\begin{alphalist}
-	\item is not weakly-ideal, so we cannot numerically assess if two embeddings represent equivalent traces 
-	(Example \ref{ex:wheredotiszero});
-	\item does not characterize $\tau$-moves, so the probabilities of the initial and final $\tau$-moves are not preserved; and
-	\item is affected by numerical errors from finite arithmetics: longer traces $\nonlogtrace$ generated from skewed probability 
-	distributions $G.\Lambda^i$ yield greater truncation errors, as smaller $\lambda^i$ components for bigger 
-	$i<|\nonlogtrace|$ are ignored, preventing a complete numerical vector characterization of  $\nonlogtrace$ in practice.
-\end{alphalist}
-%
-To overcome these shortcomings we 
-\begin{alphalist} 
-	\item propose a weakly-ideal embedding, which also 
-	\item exploits an $\omega$ factor for preserving probabilities from and to $\tau$ transitions, and 
-	\item mitigates the numerical truncation errors induced by trace length and probability distribution skewness through two 
-	sub-embedding strategies, $\epsilon^x$ and $\nu^x$. The former descends from $\trembed$ and the latter approximates 
-	the trace similarity through label frequencies.
-\end{alphalist}
-%
-Since a trace embedding for $\nonlogtrace$ representing the transitions in $\closed{\tg}.\Lambda$ requires an intermediate 
-TG representation, each $\nonlogtrace$ is mapped to a weighted TG $(\tg_\nonlogtrace,\omega)$:
-%
-\begin{definition}[trace projection]
-	Let $\closed{G}=(V,s,t,L,R)$ be a $\tau$-closed TG, and $\pmin\in(0,1]$. The $\closed{G}$ \emph{projection} over the trace 
-	$\nonlogtrace$ is the weighted TG $(\closed{G}_\nonlogtrace,\omega)$, where $\closed{G}_\nonlogtrace$ is the TG 
-	$(V_\nonlogtrace,s,t,L_\nonlogtrace,R_\nonlogtrace)$ where
-	$V_\nonlogtrace$ contains the nodes generating $\nonlogtrace$ from $\closed{G}$	
-	(i.e., $\seqs{\sigma'}{ \closed{G}}$) and
-	$L_\nonlogtrace$ and $R_\nonlogtrace$ are the restrictions of $L$ and $R$ to $V_\nonlogtrace$; and
-	$\omega := 1-\prod_{\Ind{0}\cdots\Ind{n}\in\seqs{\sigma'}{ \closed{G}}}\Big(1-(\textit{ifte}(\mathbf{1}_{L_{\sigma'}(\Ind{0})=\tau},[R_{\sigma'}]_{\Ind{0}\Ind{1}})\textit{ifte}(\mathbf{1}_{L_{\sigma'}(\Ind{n})=\tau},[R_{\sigma'}]_{\Ind{n-1}\Ind{n}})\Big)$
-	where $\textit{ifte}(x,y):=x(y-1)+1$ returns $y$ if $x=1$ and $1$ otherwise. We denote the set of all the $\closed{G}_\nonlogtrace$ as $\TBf{\pmin}{4}(\closed{G})$.%\todo{need to understand this}
-	%\dots
-	%		
-	%		\dots we generate a set $\TBf{\pmin}{n}(\closed{G})$ of projected TGs $P$ for each trace in $\WCal{\pmin}{n}(P)$ as follows: for each weighted trace $\braket{\nonlogtrace,\probskip{\nonlogtrace}}\in\WCal{\pmin}{n}(P)$ generated from a path $\pi_\nonlogtrace=s\to n_2\rightsquigarrow n_m\to t$ over $R$, we generate a TG $P_\nonlogtrace=(s',t',L_\nonlogtrace,R_\nonlogtrace,\omega')$, where \begin{inparaenum}[\it (i)]
-	%			\item $s'=s$ if $\textit{label}(s)\neq \tau$ and $t'=n_2$ otherwise,
-	%			\item $t'=t$ if $\textit{label}(t)\neq \tau$ and $t'=n_m$ otherwise,
-	%			\item $L_\nonlogtrace$ (and $R_\nonlogtrace$) is the submatrix of $L$ (and $R$) over the non-$\tau$ labeled notes in $\pi_\nonlogtrace$ and the labels from $\nonlogtrace$,
-	%			\item $\omega'$ is initialized by $\omega$ and then multiplied by $[R]_{s,n_2}$ (and also $[R]_{n_m,t}$) if $\textit{label}(s)=\tau$ (and  $\textit{label}(t)=\tau$).
-	%		\end{inparaenum}
-\end{definition}
+
+In order to meet the goal, we need to first transform a SWN into a TG as sketched in \S\ref{sec:was}: first, for each model trace $\nonlogtrace$ we need to restrict the TG into a \textit{weighted} TG $wTG_\nonlogtrace=(TG_{\nonlogtrace},\omega_\nonlogtrace)$, where $TG_{\nonlogtrace}$ contains only the nodes generating $\nonlogtrace$, thus restricting the associated matrices $L$ (and $R$) into $L_\nonlogtrace$ (and $R_\nonlogtrace$). $\omega_\nonlogtrace$ is then exploited to preserving probabilities from initial (and to final) $\tau$ transitions. Such $\omega$ can be computed as $\omega := 1-\prod_{\Ind{0}\cdots\Ind{n}\in\seqs{\sigma'}{ \closed{G}}}\Big(1-(\textit{ifte}(\mathbf{1}_{L_{\sigma'}(\Ind{0})=\tau},[R_{\sigma'}]_{\Ind{0}\Ind{1}})\textit{ifte}(\mathbf{1}_{L_{\sigma'}(\Ind{n})=\tau},[R_{\sigma'}]_{\Ind{n-1}\Ind{n}})\Big)$
+where $\textit{ifte}(x,y):=x(y-1)+1$ returns $y$ if $x=1$ and $1$ otherwise. %We denote the set of all the $\closed{G}_\nonlogtrace$ as $\TBf{\pmin}{4}(\closed{G})$.
+%The graph weight $\omega$ derives from the outgoing edges of the initial node and the ingoing edges of the accepting node; 
+%such nodes are labeled as $\tau$. %Since the embedding strategy from \cite{LodhiSSCW02} considers only visible 
+%transitions, and the trace extraction process discards the $\tau$ information, we use $\omega$ to preserve such information.
+%We call the pair consisting of a transition graph and a graph weight a \emph{weighted transition graph}.
+%\begin{example}\label{ex:neue}
+%\end{aligned}$$
+Table \ref{tab:proj} shows the projected transition graphs associated to  traces from Example \ref{ex:rankingTaus}, where  all the $\tau$-labeled nodes are removed as required.
+%\end{example}
 %	
+%
+%
+%Since a trace embedding for $\nonlogtrace$ representing the transitions in $\closed{\tg}.\Lambda$ requires an intermediate 
+%TG representation, each $\nonlogtrace$ is mapped to a weighted TG $(\tg_\nonlogtrace,\omega)$:
+%%
+%\begin{definition}[trace projection]
+%	Let $\closed{G}=(V,s,t,L,R)$ be a $\tau$-closed TG, and $\pmin\in(0,1]$. The $\closed{G}$ \emph{projection} over the trace 
+%	$\nonlogtrace$ is the weighted TG $(\closed{G}_\nonlogtrace,\omega)$, where $\closed{G}_\nonlogtrace$ is the TG 
+%	$(V_\nonlogtrace,s,t,L_\nonlogtrace,R_\nonlogtrace)$ where
+%	$V_\nonlogtrace$ contains the nodes generating $\nonlogtrace$ from $\closed{G}$	
+%	(i.e., $\seqs{\sigma'}{ \closed{G}}$) and
+%	$L_\nonlogtrace$ and $R_\nonlogtrace$ are the restrictions of $L$ and $R$ to $V_\nonlogtrace$; and
+%	$\omega := 1-\prod_{\Ind{0}\cdots\Ind{n}\in\seqs{\sigma'}{ \closed{G}}}\Big(1-(\textit{ifte}(\mathbf{1}_{L_{\sigma'}(\Ind{0})=\tau},[R_{\sigma'}]_{\Ind{0}\Ind{1}})\textit{ifte}(\mathbf{1}_{L_{\sigma'}(\Ind{n})=\tau},[R_{\sigma'}]_{\Ind{n-1}\Ind{n}})\Big)$
+%	where $\textit{ifte}(x,y):=x(y-1)+1$ returns $y$ if $x=1$ and $1$ otherwise. We denote the set of all the $\closed{G}_\nonlogtrace$ as $\TBf{\pmin}{4}(\closed{G})$.%\todo{need to understand this}
+%	%\dots
+%	%		
+%	%		\dots we generate a set $\TBf{\pmin}{n}(\closed{G})$ of projected TGs $P$ for each trace in $\WCal{\pmin}{n}(P)$ as follows: for each weighted trace $\braket{\nonlogtrace,\probskip{\nonlogtrace}}\in\WCal{\pmin}{n}(P)$ generated from a path $\pi_\nonlogtrace=s\to n_2\rightsquigarrow n_m\to t$ over $R$, we generate a TG $P_\nonlogtrace=(s',t',L_\nonlogtrace,R_\nonlogtrace,\omega')$, where \begin{inparaenum}[\it (i)]
+%	%			\item $s'=s$ if $\textit{label}(s)\neq \tau$ and $t'=n_2$ otherwise,
+%	%			\item $t'=t$ if $\textit{label}(t)\neq \tau$ and $t'=n_m$ otherwise,
+%	%			\item $L_\nonlogtrace$ (and $R_\nonlogtrace$) is the submatrix of $L$ (and $R$) over the non-$\tau$ labeled notes in $\pi_\nonlogtrace$ and the labels from $\nonlogtrace$,
+%	%			\item $\omega'$ is initialized by $\omega$ and then multiplied by $[R]_{s,n_2}$ (and also $[R]_{n_m,t}$) if $\textit{label}(s)=\tau$ (and  $\textit{label}(t)=\tau$).
+%	%		\end{inparaenum}
+%\end{definition}
+%	
+%\begin{table}[!t]
+%	\caption{Projections of $\tg$ over $\net$-traces of length $4$.}\label{tab:proj}
+%	\centering
+%	\resizebox{.3\textwidth}{!}{\begin{tabular}{>{\centering\arraybackslash} m{1cm}| >{\centering\arraybackslash} m{4cm} >{\centering\arraybackslash} m{1cm} >{\centering\arraybackslash} m{1cm} }
+%			\toprule
+%			$\nonlogtrace$&$G_\nonlogtrace$&$l$&$\omega$\\
+%			\midrule
+%			$\const{a}$ & \includegraphics{images/trace_a} & $1$ & $\color{violet}\pa\pf$\\
+%			$\const{cb}$ & \includegraphics{images/trace_cb} & $2$ & $\color{violet}\pb$\\
+%			$\const{aaa}$ & \includegraphics{images/trace_a_loop} & $3$ & $\color{violet}\pa\pf$\\
+%			$\const{caa}$ & \includegraphics{images/trace_caa} & $3$ & $\color{violet}\pb\pf$\\
+%			%			\bottomrule
+%			%	\end{tabular}}\qquad \qquad 	
+%			%	\resizebox{.3\textwidth}{!}{\begin{tabular}{>{\centering\arraybackslash} m{1cm}| >{\centering\arraybackslash} m{4cm} >{\centering\arraybackslash} m{1cm} >{\centering\arraybackslash} m{1cm} }
+%			%	\toprule
+%			%	$\nonlogtrace$&$G_\nonlogtrace$&$l$&$\omega$\\
+%			%	\midrule
+%			$\const{aa}$ & \includegraphics{images/trace_aa} & $2$ & $\color{violet}\pa\pf$\\
+%			$\const{ca}$ & \includegraphics{images/trace_ca} & $2$ & $\color{violet}\pb\pf$\\
+%			\begin{tabular}{l}aaaa\end{tabular} & \includegraphics{images/trace_a_loop} & $4$ & $\color{violet}\pa\pf$\\
+%			$\const{caaa}$ & \includegraphics{images/trace_ca_loop} & $4$ & $\color{violet}\pb\pf$\\
+%			\bottomrule
+%	\end{tabular}}
+%	%\vspace{-0.2cm}
+%\end{table}
 \begin{table}[!t]
-	\caption{Projections of $\tg$ over $\net$-traces of length $4$.}\label{tab:proj}
+	\caption{Projections over $\net$-traces of length $4$.}\label{tab:proj}
 	\centering
 	\resizebox{.3\textwidth}{!}{\begin{tabular}{>{\centering\arraybackslash} m{1cm}| >{\centering\arraybackslash} m{4cm} >{\centering\arraybackslash} m{1cm} >{\centering\arraybackslash} m{1cm} }
 			\toprule
-			$\nonlogtrace$&$G_\nonlogtrace$&$l$&$\omega$\\
+			$\nonlogtrace$&$TG_\nonlogtrace$&$l$&$\omega_\nonlogtrace$\\
 			\midrule
 			$\const{a}$ & \includegraphics{images/trace_a} & $1$ & $\color{violet}\pa\pf$\\
 			$\const{cb}$ & \includegraphics{images/trace_cb} & $2$ & $\color{violet}\pb$\\
 			$\const{aaa}$ & \includegraphics{images/trace_a_loop} & $3$ & $\color{violet}\pa\pf$\\
 			$\const{caa}$ & \includegraphics{images/trace_caa} & $3$ & $\color{violet}\pb\pf$\\
-			%			\bottomrule
-			%	\end{tabular}}\qquad \qquad 	
-			%	\resizebox{.3\textwidth}{!}{\begin{tabular}{>{\centering\arraybackslash} m{1cm}| >{\centering\arraybackslash} m{4cm} >{\centering\arraybackslash} m{1cm} >{\centering\arraybackslash} m{1cm} }
-			%	\toprule
-			%	$\nonlogtrace$&$G_\nonlogtrace$&$l$&$\omega$\\
-			%	\midrule
+			\bottomrule
+	\end{tabular}}\qquad \qquad 	
+	\resizebox{.3\textwidth}{!}{\begin{tabular}{>{\centering\arraybackslash} m{1cm}| >{\centering\arraybackslash} m{4cm} >{\centering\arraybackslash} m{1cm} >{\centering\arraybackslash} m{1cm} }
+			\toprule
+			$\nonlogtrace$&$TG_\nonlogtrace$&$l$&$\omega_\nonlogtrace$\\
+			\midrule
 			$\const{aa}$ & \includegraphics{images/trace_aa} & $2$ & $\color{violet}\pa\pf$\\
 			$\const{ca}$ & \includegraphics{images/trace_ca} & $2$ & $\color{violet}\pb\pf$\\
 			\begin{tabular}{l}aaaa\end{tabular} & \includegraphics{images/trace_a_loop} & $4$ & $\color{violet}\pa\pf$\\
 			$\const{caaa}$ & \includegraphics{images/trace_ca_loop} & $4$ & $\color{violet}\pb\pf$\\
 			\bottomrule
 	\end{tabular}}
-	%\vspace{-0.2cm}
+	\vspace{-0.2cm}
 \end{table}
-The graph weight $\omega$ derives from the outgoing edges of the initial node and the ingoing edges of the accepting node; 
-such nodes are labeled as $\tau$. Since the embedding strategy from \cite{LodhiSSCW02} considers only visible 
-transitions, and the trace extraction process discards the $\tau$ information, we use $\omega$ to preserve such information.
-%We call the pair consisting of a transition graph and a graph weight a \emph{weighted transition graph}.
-\begin{example}\label{ex:neue}
-	%\end{aligned}$$
-	Table \ref{tab:proj} shows the projected transition graphs associated to  traces from Example \ref{ex:rankingTaus}, where only the relevant information
-	for embedding them is displayed (e.g., all the $\tau$-labeled nodes are removed).
-\end{example}
-%	
-The embedding $\gorgembed$ is computed for each weighted TG. The goal is to use
-$k_{\gorgembed}$ for ranking all the traces generated by \unravelling\ via such graphs. We extend $\trembed$ %from 
-%\cite{LodhiSSCW02} including the associated probabilities, and
-by making the ranking induced by $k_{\gorgembed}$ the inverse of 
-that induced by the
-sum of the following distances: the transition correlations $\epsilon$ and the transition label frequency $\nu$.
-We need that the desired properties of $\gorgembed$ are independent of the characterization of $\epsilon$ over the 
-$2$-grams in $\tasks^2$ and $\nu$ over the labels in $\tasks$. %which  provide different embedding strategies. Therefore, our 
-%$\gorgembed$ embedding is defined for any weighted TG.
+Our proposed embedding $\gorgembed$ \cite{Bergami21} can be now exploited for each  $wTG_\nonlogtrace$ as follows:
+%Our proposed embedding $\gorgembed$ is computed for each $wTG_\nonlogtrace$. The goal is to use
+%$k_{\gorgembed}$ for ranking all the traces generated by \unravelling\ via such graphs. We extend $\trembed$ %from 
+%%\cite{LodhiSSCW02} including the associated probabilities, and
+%by making the ranking induced by $k_{\gorgembed}$ the inverse of 
+%that induced by the
+%sum of the following distances: the transition correlations $\epsilon$ and the transition label frequency $\nu$.
+%We need that the desired properties of $\gorgembed$ are independent of the characterization of $\epsilon$ over the 
+%$2$-grams in $\tasks^2$ and $\nu$ over the labels in $\tasks$. %which  provide different embedding strategies. Therefore, our 
+%%$\gorgembed$ embedding is defined for any weighted TG.
 
 
 %\begin{table}[!t]
@@ -219,13 +254,12 @@ $2$-grams in $\tasks^2$ and $\nu$ over the labels in $\tasks$. %which  provide d
 %	\bottomrule
 %\end{tabular}
 %\end{table}
-\begin{definition}[G-Embedding]\label{def:ppne}
+\begin{definition}[TG-Embedding]\label{def:ppne}
 	%Given a finite set of non-empty labels $\trace_\tau =\trace\backslash\{\tau\}$, $\trace_\tau^2$ denotes all the possible pair of labels associated to paths ${\color{green}\alpha}\rightsquigarrow{\color{green}\beta}$ and $\trace_\tau$ denotes the set of all the possible non-$\tau$ node labels. Therefore, it is always possible to enumerate $\trace_\tau^2\cup\trace_\tau$ via an enumeration by a bijection $\iota\colon \trace_\tau^2\cup\trace_\tau\to  N$, where $N\subset \mathbb{N}_{\neq 0}$ and $\max N=|N|$.
-	Given a weighted TG $(G,\omega)$ with $G=(V,s,t,L,R)$ and a tuning parameter $t_f\in[0,1]$, the \emph{G-Embedding} 
-	over the visible $2$-grams and transition labels, $\tasks\cup\tasks^2$, is 
+	Given a weighted TG $wTG_\nonlogtrace=(TG_{\nonlogtrace},\omega_\nonlogtrace)$ and a tuning parameter $t_f\in[0,1]$, the \emph{TG-Embedding} is 
 	$$\gorgembed_{i}(G):=\begin{cases}
-	\omega \frac{\epsilon_\const{ab}(G)}{\|\epsilon\|_2}\;t_f^{|R>0|}\, & {i}=\const{ab}\in\tasks^2\\
-	\frac{\nu_\const{a}(G)}{\|\nu\|_2}\;\;\;\,t_f^{|R>0|}\, & {i}=\const{a}\in\tasks\\
+	\omega_\nonlogtrace \frac{\epsilon_\const{ab}(TG_{\nonlogtrace})}{\|\epsilon\|_2}\;t_f^{|R>0|}\, & {i}=\const{ab}\in\tasks^2\\
+	\frac{\nu_\const{a}(TG_{\nonlogtrace})}{\|\nu\|_2}\;\;\;\,t_f^{|R>0|}\, & {i}=\const{a}\in\tasks\\
 	\end{cases}$$
 	where $\nu$ and $\epsilon$ represent the embeddings associated to $L$ and $L,R$: $\epsilon$  returns 
 	$\epsilon_\const{ab}=0$ for the $2$-grams $\const{ab}$ not represented by the TG, and either $\nu$ always returns the empty 
@@ -273,16 +307,16 @@ recomputed for each alignment.
 			\toprule
 			& $\const{a}$    & $\const{b}$                                                   & $\const{c}$    & $\const{aa}$  & $\const{ab}$   & $\const{ac}$   & $\const{ba}$  & $\const{bb}$   & $\const{bc}$   & $\const{ca}$   & $\const{cb}$  & $\const{cc}$  \\
 			\midrule		
-			$\gorgembed(\overline{G}_\const{aaaa})$ & $1.00\cdot 10^{-24}$ & $0.00\cdot 10^{0}$   & $0.00\cdot 10^{0}$   & $6.44\cdot 10^{-26}$ & $0.00\cdot 10^{0}$& $0.00\cdot 10^{0}$& $0.00\cdot 10^{0}$& $0.00\cdot 10^{0}$& $0.00\cdot 10^{0}$    &$0.00\cdot 10^{0}$& $0.00\cdot 10^{0}$& $0.00\cdot 10^{0}$ \\
-			$\gorgembed(\overline{G}_\const{aaa})$  & $1.00\cdot 10^{-24}$ & $0.00\cdot 10^{0}$   & $0.00\cdot 10^{0}$   & $1.29\cdot 10^{-25}$ & $0.00\cdot 10^{0}$& $0.00\cdot 10^{0}$& $0.00\cdot 10^{0}$& $0.00\cdot 10^{0}$& $0.00\cdot 10^{0}$    &$0.00\cdot 10^{0}$& $0.00\cdot 10^{0}$& $0.00\cdot 10^{0}$ \\
-			$\gorgembed(\overline{G}_\const{aa})$   & $1.00\cdot 10^{-24}$ & $0.00\cdot 10^{0}$   & $0.00\cdot 10^{0}$   & $2.57\cdot 10^{-25}$ & $0.00\cdot 10^{0}$& $0.00\cdot 10^{0}$& $0.00\cdot 10^{0}$& $0.00\cdot 10^{0}$& $0.00\cdot 10^{0}$    &$0.00\cdot 10^{0}$& $0.00\cdot 10^{0}$& $0.00\cdot 10^{0}$ \\
-			$\gorgembed(\overline{G}_\const{a})$    & $1.00\cdot 10^{-4}$  & $0.00\cdot 10^{0}$   & $0.00\cdot 10^{0}$   & $0.00\cdot 10^{0}$   & $0.00\cdot 10^{0}$& $0.00\cdot 10^{0}$& $0.00\cdot 10^{0}$& $0.00\cdot 10^{0}$& $0.00\cdot 10^{0}$    &$0.00\cdot 10^{0}$& $0.00\cdot 10^{0}$& $0.00\cdot 10^{0}$ \\
-			$\gorgembed(\overline{G}_\const{caa})$  & $7.07\cdot 10^{-25}$ & $0.00\cdot 10^{0}$   & $7.07\cdot 10^{-25}$ & $1.46\cdot 10^{-25}$ & $0.00\cdot 10^{0}$& $0.00\cdot 10^{0}$& $0.00\cdot 10^{0}$& $0.00\cdot 10^{0}$& $0.00\cdot 10^{0}$    &$2.05\cdot 10^{-25}$& $0.00\cdot 10^{0}$& $0.00\cdot 10^{0}$ \\
-			$\gorgembed(\overline{G}_\const{ca})$   & $7.07\cdot 10^{-25}$ & $0.00\cdot 10^{0}$   & $7.07\cdot 10^{-25}$ & $0.00\cdot 10^{0}$   & $0.00\cdot 10^{0}$& $0.00\cdot 10^{0}$& $0.00\cdot 10^{0}$& $0.00\cdot 10^{0}$& $0.00\cdot 10^{0}$    &$1.00\cdot 10^{-8}$& $0.00\cdot 10^{0}$& $0.00\cdot 10^{0}$ \\
-			$\gorgembed(\overline{G}_\const{cb})$   & $0.00\cdot 10^{0}$   & $7.07\cdot 10^{-25}$ & $7.07\cdot 10^{-25}$ & $0.00\cdot 10^{0}$   & $0.00\cdot 10^{0}$& $0.00\cdot 10^{0}$& $0.00\cdot 10^{0}$& $0.00\cdot 10^{0}$& $0.00\cdot 10^{0}$    &$0.00\cdot 10^{0}$ & $4.29\cdot 10^{-9}$& $0.00\cdot 10^{0}$ \\
-			$\gorgembed(\overline{G}_\const{caaa})$ & $7.07\cdot 10^{-25}$ & $0.00\cdot 10^{0}$   & $7.07\cdot 10^{-25}$ & $1.03\cdot 10^{-25}$ & $0.00\cdot 10^{0}$& $0.00\cdot 10^{0}$& $0.00\cdot 10^{0}$& $0.00\cdot 10^{0}$& $0.00\cdot 10^{0}$    &$7.20\cdot 10^{-26}$ & $0.00\cdot 10^{0}$& $0.00\cdot 10^{0}$ \\
+			$\gorgembed(\overline{G}_\const{aaaa})$ & $1.00\cdot 10^{-24}$ & $0$   & $0$   & $6.44\cdot 10^{-26}$ & $0$& $0$& $0$& $0$& $0$    &$0$& $0$& $0$ \\
+			$\gorgembed(\overline{G}_\const{aaa})$  & $1.00\cdot 10^{-24}$ & $0$   & $0$   & $1.29\cdot 10^{-25}$ & $0$& $0$& $0$& $0$& $0$    &$0$& $0$& $0$ \\
+			$\gorgembed(\overline{G}_\const{aa})$   & $1.00\cdot 10^{-24}$ & $0$   & $0$   & $2.57\cdot 10^{-25}$ & $0$& $0$& $0$& $0$& $0$    &$0$& $0$& $0$ \\
+			$\gorgembed(\overline{G}_\const{a})$    & $1.00\cdot 10^{-4}$  & $0$   & $0$   & $0$   & $0$& $0$& $0$& $0$& $0$    &$0$& $0$& $0$ \\
+			$\gorgembed(\overline{G}_\const{caa})$  & $7.07\cdot 10^{-25}$ & $0$   & $7.07\cdot 10^{-25}$ & $1.46\cdot 10^{-25}$ & $0$& $0$& $0$& $0$& $0$    &$2.05\cdot 10^{-25}$& $0$& $0$ \\
+			$\gorgembed(\overline{G}_\const{ca})$   & $7.07\cdot 10^{-25}$ & $0$   & $7.07\cdot 10^{-25}$ & $0$   & $0$& $0$& $0$& $0$& $0$    &$1.00\cdot 10^{-8}$& $0$& $0$ \\
+			$\gorgembed(\overline{G}_\const{cb})$   & $0$   & $7.07\cdot 10^{-25}$ & $7.07\cdot 10^{-25}$ & $0$   & $0$& $0$& $0$& $0$& $0$    &$0$ & $4.29\cdot 10^{-9}$& $0$ \\
+			$\gorgembed(\overline{G}_\const{caaa})$ & $7.07\cdot 10^{-25}$ & $0$   & $7.07\cdot 10^{-25}$ & $1.03\cdot 10^{-25}$ & $0$& $0$& $0$& $0$& $0$    &$7.20\cdot 10^{-26}$ & $0$& $0$ \\
 			\bottomrule
-			$\gorgembed(\overline{G}_\const{caba})$ & $8.16\cdot10^{-17}$ & $4.08\cdot 10^{-17}$ & $4.08\cdot10^{-17}$ & $4.37\cdot 10^{-17}$ &  $0.00\cdot 10^{0}$& $0.00\cdot 10^{0}$& $0.00\cdot 10^{0}$ & $0.00\cdot 10^{0}$ & $0.00\cdot 10^{0}$    & $1.03\cdot10^{-16}$ & $4.37\cdot10^{-17}$& $0.00\cdot 10^{0}$ \\
+			$\gorgembed(\overline{G}_\const{caba})$ & $8.16\cdot10^{-17}$ & $4.08\cdot 10^{-17}$ & $4.08\cdot10^{-17}$ & $4.37\cdot 10^{-17}$ &  $0$& $0$& $0$ & $0$ & $0$    & $1.03\cdot10^{-16}$ & $4.37\cdot10^{-17}$& $0$ \\
 			\bottomrule
 	\end{tabular}}
 	
@@ -291,8 +325,8 @@ recomputed for each alignment.
 	%\small \label{ex:withpaths} %After generating all the TGs for the \unravelled\ traces (Example \ref{ex:neue}), we further associate a sub-embedding $\epsilon$ using the $2$-grams included in the model traces.\footnoteref{fn:caveat}
 	%Given $\nonlogtrace_\tau=\Set{a,b,c}$, the embedding space is of size $6$: three features (computed using $\nu$) correspond to the labels of the non-$\tau$ vertices in $\nonlogtrace_\tau$, i.e., $\{a,b,c\}$, and other three features (computed using $\epsilon$) correspond to the $2$-grams subsequences that are also traces in $W^4_0(P)$, i.e., $\{aa,ca,cb\}$. Therefore, $\{a,b,c,aa,ca,cb\}\subset \nonlogtrace_\tau^2\cup\nonlogtrace_\tau$ is the whole set of features describing both the label and the transition matrix, so $\gorgembed$ is a vector with 6 dimensions.
 	%\xout{The embedding associated to $P$ is described in Table \ref{tab:emb1} as $\gorgembed(P)$: it shows that doing ${\color{green}a}\rightsquigarrow{\color{green}a}$ is more probable than doing  ${\color{green}c}\rightsquigarrow{\color{green}a}$. Also, given that both the probability of performing ${\color{green}c}\overset{1}{\rightsquigarrow}{\color{green}b}$ is relatively low and trace $\color{green}cb$ is relatively infrequent, ${\color{green}c}{\rightsquigarrow}{\color{green}b}$ is less probable than any other subtrace. If we now consider the single nodes, $\color{green}c$ shares a subset of traces with $\color{green}a$ where $\color{green}a$ is more frequent than $\color{green}c$, and therefore the score of the former is higher than the one of the latter. Also, the score associated to the single node $\color{green}b$ is lower than the one for the single node $\color{green}c$ because $\color{green}b$ is less frequent and appears in less probable traces than $\color{green}c$: in particular, $\color{green}c$ appears in \textit{ca}, which is more probable than \textit{cb}.}
-	Table \ref{tab:emb2} shows the embeddings $\gorgembed(\overline{G}_\nonlogtrace)$ generated from Example \ref{ex:neue}, where the $l=|\nonlogtrace|$ for each \unravelled trace.
-	After representing trace $\logtrace=\const{caba}$ as a graph (\figurename~\ref{fig:taustar}), we find its
+	Table \ref{tab:emb2} shows the embeddings $\gorgembed(\overline{G}_\nonlogtrace)$ generated from Table \ref{tab:proj}, where the $l=|\nonlogtrace|$ for each \unravelled trace.
+	After representing trace $\logtrace=\const{caba}$ as a sequence graph, we find its
 	embedding $\gorgembed(\overline{G}_{\logtrace})$ with strategies $\epsilon^1$ and $\nu^1$ 
 	{as} in Table \ref{tab:embsitar}: $\const{a}$ is the most frequent label and $\const{b}$ and $\const{c}$ are equiprobable. 
 	The $2$-gram $\const{ca}$ appears twice in the trace set and is more frequent than other $2$-grams.
@@ -556,7 +590,13 @@ The kernel $k_{\gorgembed}(G,G')$ can also be expressed as a function of the dot
 \textbf{Properties.}\label{subsub:prop}
 When two traces $\logtrace$ and ${\nonlogtrace}$ are equivalent (correspond to the same sequence of labels with the 
 same probability), the kernel computation reduces to $\omega\omega'$. When both weights are $1$, the kernel returns $1$. 
-We call this condition \textit{weak equality} because we cannot prove that when the kernel is equal to $\omega\omega'$ then the two traces are equivalent (there could be equal embeddings coming from non-equivalent traces). 
+We call this condition \textit{weak equality} because we cannot prove that when the kernel is equal to $\omega\omega'$ then the two traces are equivalent (there could be equal embeddings coming from non-equivalent traces). \figurename~\ref{fig:counterexample} show in fact two TGs generating a different set of traces but providing the same embedding.
+%
+Traces having neither $2$-grams nor transition labels in common have kernel $0$ and vice versa (\textit{strong dissimilarity}).
+%
+Due to weak equality and strong similarity, the embedding is weakly-ideal. {By previous lemmas, all combinations of sub-embeddings from Table~\ref{tab:embedstrat} give weakly-ideal $G$-embeddings.} 
+%
+Last, we provide the aforementioned lemmas' statements:
 
 \begin{figure}[!t]
 	\vspace*{-0.5cm}
@@ -564,15 +604,15 @@ We call this condition \textit{weak equality} because we cannot prove that when 
 	\includegraphics[scale=0.7]{images/counterexample.pdf}
 	\caption{Two $\tau$-closed TGs, $Q$ (left) and $Q'$ (right), having a different set of traces but the same embedding.}\label{fig:counterexample}
 \end{figure}
-\begin{example}
-	Using $\epsilon$ (or $\epsilon^2$) and $\nu$ (or $\nu^2$) for $\gorgembed$ may yield false positives for ``weak equality'' 
-	if $Q=(V,s,s,L,R)$ and $Q'=(V,s',s',L,R)$ are both cycle graphs with $s\neq s'$, $\textit{label}(s)\neq\textit{label}(s')$, and
-	$\textit{label}(s),\textit{label}(s')\neq\tau$. The graphs in Figure \ref{fig:counterexample} have the 
-	same frequency for subtraces and nodes, and thus the same  $\epsilon$ and $\nu$ by construction. Using different 
-	initial and accepting node with  different labels, $\ptraces{Q}{0}=\{\textup{a(bca)}^n\mid n\in\mathbb{N}\}$ and 
-	$\ptraces{Q'}{0}=\{\textup{c(abc)}^n|n\in\mathbb{N}\}$. Thus, implying $\ptraces{Q}{0}\neq\ptraces{Q'}{0}$ but 
-	$k_{\gorgembed}(Q,Q')=1$ for $t_f=1$.
-\end{example}
+%\begin{example}
+%	Using $\epsilon$ (or $\epsilon^2$) and $\nu$ (or $\nu^2$) for $\gorgembed$ may yield false positives for ``weak equality'' 
+%	if $Q=(V,s,s,L,R)$ and $Q'=(V,s',s',L,R)$ are both cycle graphs with $s\neq s'$, $\textit{label}(s)\neq\textit{label}(s')$, and
+%	$\textit{label}(s),\textit{label}(s')\neq\tau$. The graphs in Figure \ref{fig:counterexample} have the 
+%	same frequency for subtraces and nodes, and thus the same  $\epsilon$ and $\nu$ by construction. Using different 
+%	initial and accepting node with  different labels, $\ptraces{Q}{0}=\{\textup{a(bca)}^n\mid n\in\mathbb{N}\}$ and 
+%	$\ptraces{Q'}{0}=\{\textup{c(abc)}^n|n\in\mathbb{N}\}$. Thus, implying $\ptraces{Q}{0}\neq\ptraces{Q'}{0}$ but 
+%	$k_{\gorgembed}(Q,Q')=1$ for $t_f=1$.
+%\end{example}
 
 \begin{lemma}[Weak Equality]
 	\label{we}
@@ -580,8 +620,7 @@ We call this condition \textit{weak equality} because we cannot prove that when 
 	$k_{\gorgembed}(G,G')=\omega\omega'$ for $t_f=1$.
 \end{lemma}
 
-%
-Traces having neither $2$-grams nor transition labels in common have kernel $0$ and vice versa (\textit{strong dissimilarity}). 
+ 
 
 \begin{lemma}[Strong Dissimilarity]
 	\label{lem:sdiss}
@@ -590,8 +629,7 @@ Traces having neither $2$-grams nor transition labels in common have kernel $0$ 
 \end{lemma}
 
 
-%
-Due to weak equality and strong similarity, the embedding is weakly-ideal. {By previous lemmas, all combinations of sub-embeddings from Table~\ref{tab:embedstrat} give weakly-ideal $G$-embeddings.} 
+
 
 %Last, under the assumption that a TG is approximately characterized by $\epsilon$ and $\nu$, we might expect that the TG similarity is characterized by the sum of the distance of both embeddings. Therefore, we show that an increase in both distance embeddings approximately corresponds to a decrease in the kernel output and vice-versa.
 %
