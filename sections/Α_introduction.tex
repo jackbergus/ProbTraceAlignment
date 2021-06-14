@@ -22,9 +22,9 @@ balance between the likelihood of the model trace with respect to which the alig
 
 \begin{figure}[!t]
 	\centering
-	\includegraphics[width=.6\textwidth]{images/petri_tut.pdf}
+	\includegraphics[width=.49\textwidth]{images/petri_tut.pdf}
 	\caption{Stochastic Workflow Net modeling our use-case scenario.}\label{fig:petri_tut}
-	\vspace{-1.4cm}
+	%\vspace{-1.4cm}
 \end{figure}
 %For example, the probabilistic alignment of a trace with a stochastic net could be represented by the model trace maximizing the combined provision of minimum trace alignment cost and maximum model trace probability. 
 With reference to Figure~\ref{fig:petri_tut}, a user might be interested to align the log trace $\langle \textsf{close order},\,\textsf{archive order}\rangle$ with one of the two possible model traces $\langle\textsf{close order},$ $\textsf{accept order},\,\textsf{pay order},\,\textsf{archive order}\rangle$ or $\langle$\textsf{close order}, \textsf{refuse order}, \textsf{archive order}$\rangle$. While the latter trace provides the least alignment cost though the model trace has a low probability ($0.1$), the former gives a slightly greater alignment cost while providing a higher model trace probability ($0.9$). Since, depending on the context, analysts might prefer either the former or the latter alignment, providing a selection of the best $k$ alignments among all the distinct model traces empowers the analysts to find their own trade-off between alignment cost and model trace probability.
@@ -53,16 +53,20 @@ We introduce two ranking strategies. The first one is based on a brute force app
 
 \begin{figure*}[!t]
 	\begin{minipage}{.49\textwidth}
-		\includegraphics[width=.9\textwidth]{images/petri.pdf}
+		\centering
+		\includegraphics[width=.7\textwidth]{images/petri.pdf}
 		\caption{A sample \uswn $N$. Labels are shown in green, $\tau$ transitions in grey, weights in magenta.}\label{fig:spn}
 	\end{minipage}\hfill \begin{minipage}{.49\textwidth}
-		\includegraphics[width=.9\textwidth]{images/rg.pdf}
+	\centering
+		\includegraphics[width=.7\textwidth]{images/rg.pdf}
 		\caption{Reachability graph  of the \uswn $N$. Probabilities are shown in violet.}\label{fig:rg}
 	\end{minipage}
 
-	\begin{minipage}{.4\textwidth} \includegraphics[width=.9\textwidth]{images/running_example.pdf}
+	\begin{minipage}{.4\textwidth}
+		\centering \includegraphics[width=.7\textwidth]{images/running_example.pdf}
 		\caption{Preliminary Transition graph $TG$ encoding the SWN $N$ with no $\tau$-closures.}\label{fig:lmc}\label{fig:orig}
-	\end{minipage}\hfill \begin{minipage}{.4\textwidth} \includegraphics[width=.9\textwidth]{images/closed_example.pdf}
+	\end{minipage}\hfill \begin{minipage}{.4\textwidth}
+	\centering \includegraphics[width=.7\textwidth]{images/closed_example.pdf}
 		\caption{Transition graph $TG$ resulting from $N$ after $\tau$-closure.}\label{fig:closed}
 	\end{minipage}
 	\vspace{-.6cm}
