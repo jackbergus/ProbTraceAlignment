@@ -14,9 +14,9 @@ We start by introducing the foundational components of our approach, and the cor
 %By interpreting concurrency by interleaving, we can represent all transition firings of an \uswn, together with their probabilities, in a reachability graph  $(M,E,P)$ where
 %\textit{(i)} $M$ is the set of all reachable markings from the initial markings,
 %\textit{(ii)} $E \subseteq M \times \alphabet \times M$ is a $\alphabet$-\emph{labeled transition relation} induced by $\net$, that is, for $\marking,\marking' \in M$, we have edge $(\marking,a,\marking') \in E$ if and only if there exists transition $t$ in $\net$ with label $\ell(t) = a$ and such that $\fire{\marking}{t}{\marking'}{\net}$, and
-%\textit{(iii)} $P:E \rightarrow [0,1]$ is the \emph{transition probability} function assigning to each transition $(\marking,a,\marking') \in E$ its corresponding probability, obtained from the firing probability of the \uswn transition(s) that lead from $\marking$ to $\marking'$ and are labeled by $a$. 
+%\textit{(iii)} $P:E \rightarrow [0,1]$ is the \emph{transition probability} function assigning to each transition $(\marking,a,\marking') \in E$ its corresponding probability, obtained from the firing probability of the \uswn transition(s) that lead from $\marking$ to $\marking'$ and are labeled by $a$.
 To model stochastic processes, we isolate an interesting class of Stochastic Petri nets \cite{MarsanCB84,Desel1998,RoggeSoltiAW13}. From the structural point of view, we consider $k$-bounded workflow nets with silent transitions. We assume a set $\alphabet = \tasks \cup \set{\tau}$ of labels, where labels in $\tasks$ indicate process tasks, whereas $\tau$ stands for an invisible execution step ($\tau$-transition). %Labels are associated to transitions via a labelling function $\lambda$.
-From the stochastic point of view, do not consider timed aspects, and only focus on the definition of a probability distribution over enabled transitions. We call these nets \emph{stochastic workflow nets} (SWN for short) 
+From the stochastic point of view, do not consider timed aspects, and only focus on the definition of a probability distribution over enabled transitions. We call these nets \emph{stochastic workflow nets} (SWN for short)
 Formally, an SWN is a tuple $\net=(P,T,F,W,i,f)$ where:
 \begin{mylist}
 	\item $P$ is a set of \textit{places};
@@ -28,8 +28,8 @@ Formally, an SWN is a tuple $\net=(P,T,F,W,i,f)$ where:
 	\item the \emph{final place} $f\in P$ has no outgoing edges. %($\not\exists t\in T. (f,t)\in F$).
 \end{mylist}
 The notions of marking, transition enablement, transition firing, and reachable markings, are as usual.
-%A \textit{marking} is an assignment of a given amount of indistinguishable tokens to places described by a vector $M\colon P\to \mathbb{N}$. We say that a given transition $t$ is \textit{enabled} if $M(p)\geq \omega(p,t)$ for each ingoing $p$ to $t$ ($(p,t)\in F$). If such transition is enabled, then it can \textit{fire} a token. The set of the \textit{enabling transitions} $E(M)$ for a given marking $M$ are all the $t$ reachable from $p$ ($(p,t)\in F$) with $M(p)\neq 0$ where $t$ is enabled. When $t$ can fire a token for a marking $M$, we can generate a novel marking $M'$ from $M$ by moving the tokens from the ingoing places towards the outgoing places as 
-%$\forall p\in P.\; M'(p)=M(p)-[\omega(p,t)]+[\omega(t,p)]$. 
+%A \textit{marking} is an assignment of a given amount of indistinguishable tokens to places described by a vector $M\colon P\to \mathbb{N}$. We say that a given transition $t$ is \textit{enabled} if $M(p)\geq \omega(p,t)$ for each ingoing $p$ to $t$ ($(p,t)\in F$). If such transition is enabled, then it can \textit{fire} a token. The set of the \textit{enabling transitions} $E(M)$ for a given marking $M$ are all the $t$ reachable from $p$ ($(p,t)\in F$) with $M(p)\neq 0$ where $t$ is enabled. When $t$ can fire a token for a marking $M$, we can generate a novel marking $M'$ from $M$ by moving the tokens from the ingoing places towards the outgoing places as
+%$\forall p\in P.\; M'(p)=M(p)-[\omega(p,t)]+[\omega(t,p)]$.
 
 We denote by $E(M)$ the set of transitions of $\net$ that are enabled in $M$. Given an initial marking $M$ over $\net$,  the \textit{reachability graph} of $(\net,M)$ is a graph $(\mathcal{M},\mathcal{E})$ with nodes $\mathcal{M}$ and $T$-labelled edges $\mathcal{E}$, where nodes $\mathcal{M}$ are all the reachable markings from $M$ ($M$ included), and where there is an edge from $M$ to $M'$ labeled by $t$ iff $t \in E(M)$ and firing $t$ in $M$ produces $M'$ (this is indicated by $M\overset{t}{\to}M'$).
 
@@ -44,14 +44,14 @@ A \emph{run} $\seq$ over $\net$ is a finite sequence $t_1\cdots t_n$ of transiti
 The sum of the probabilities of all runs of a SWN, up to a certain maximum length $n$, is always between 0 and 1. When $n$ tends to $\infty$, this sum tends to $1$. This is a direct consequence of how transition probabilities are computed, paired with the fact that runs of a workflow net are maximal.
 \end{remark}
 
-%To each of such edges $M\overset{t}{\to}M'$, we associate a transition probability. We say that a SPN with initial marking $M$ is $k$-\textit{bounded} if each of the nodes $M$ in the reachability graph have $\forall p\in P.\; M(p)\leq k$. 
+%To each of such edges $M\overset{t}{\to}M'$, we associate a transition probability. We say that a SPN with initial marking $M$ is $k$-\textit{bounded} if each of the nodes $M$ in the reachability graph have $\forall p\in P.\; M(p)\leq k$.
 
 We now turn to traces, defined as finite sequence of labels from $\tasks$ (where each element witnesses the execution of a visible activity). The main issue is that, due to $\tau$-transitions, traces do not directly map into runs. To distinguish model traces from all the possible traces $\tasks^*$, we then proceed as follows. Following \cite{DBLP:conf/edoc/AdriansyahDA11,LeoniM17},  we say that a trace $\nonlogtrace=\const{a}_1\cdots \const{a}_m$ is a \emph{model trace for $\net$} ($\net$-trace for short) if there exists a run $\seq = t_1\cdots t_n$ where the sequence $\lambda(t_1)\cdots \lambda(t_n)$ of labels of $\seq$ coincides with $\nonlogtrace$ once all the $\tau$-labels are stripped away.
 
 There may be multiple, possibly infinitely many runs yielding the same $\net$-trace. Given a $\net$-trace $\nonlogtrace$, we denote by $\seqs{\nonlogtrace}{\net}$ the set of such runs. The probability $\prob{\nonlogtrace}{\net}$ of $\nonlogtrace$ is then obtained by summing up the probabilities of all runs from $\seqs{\nonlogtrace}{\net}$.
-This corresponds to the intuition that, to observe $\nonlogtrace$, one can equivalently pick any of its underlying runs. Notably, if a trace is not a $\net$-trace (i.e., it does not conform with $\net$), then its probability is 0. 
+This corresponds to the intuition that, to observe $\nonlogtrace$, one can equivalently pick any of its underlying runs. Notably, if a trace is not a $\net$-trace (i.e., it does not conform with $\net$), then its probability is 0.
 
-To make this probability amenable to computation, we apply a \emph{second working assumption, introduced in \cite{Bergami21}, namely that of bounded silence}. A SWN has \emph{bounded silence} if there exists a fixed bound $b$ limiting the maximum number of consequent $\tau$-transitions between two visible transitions of the run. In \cite{Bergami21}, it is argued that this assumption is reasonable when modeling business processes: it retains the possibility of capturing gateways and skippable tasks, while forbidding whole cycles entirely characterized by $\tau$ transitions, which would in turn generate infinitely many runs yielding the same trace. 
+To make this probability amenable to computation, we apply a \emph{second working assumption, introduced in \cite{Bergami21}, namely that of bounded silence}. A SWN has \emph{bounded silence} if there exists a fixed bound $b$ limiting the maximum number of consequent $\tau$-transitions between two visible transitions of the run. In \cite{Bergami21}, it is argued that this assumption is reasonable when modeling business processes: it retains the possibility of capturing gateways and skippable tasks, while forbidding whole cycles entirely characterized by $\tau$ transitions, which would in turn generate infinitely many runs yielding the same trace.
 
 \begin{remark}
 \label{rem:silence}
@@ -70,19 +70,19 @@ Thanks to this final remark, we get that the problem of probabilistic trace alig
 
 
 
-%Our working assumptions are the following: 
+%Our working assumptions are the following:
 %\begin{mylist}
 %\item without any loss of generality for concurrent processes, we are interested in 1-bounded SPN, thus allowing an easy conversion from BPMN with no swim-lanes into 1-bounded SPN \cite{RaedtsPUWGS07}.
 %\item As customary in trace alignment literature, two traces are equivalent iff. they are identical after stripping $\tau$ events.
 %\item As we exploit SPN for generating the traces describing the business process via unfolding, we could discard SPNs containing either \cite{Bergami21}.
 %\item Consequently, we could further restrict our analysis to SPNs containing silent transitions representing either skip-able sequences of non-silent transition, or the possibility of choosing different sequences of non-silent transitions \cite{Bergami21}.
-%\end{mylist} We refer to a SPN satisfying such constraints as \textsc{Stochastic Workflow Nets} (SWN). 
+%\end{mylist} We refer to a SPN satisfying such constraints as \textsc{Stochastic Workflow Nets} (SWN).
 
 
 
 
 %\todo[inline]{Non capisco la frase}
-%Given a log trace $\logtrace$ coming from a log file $\mathcal{L}$, we always associate to it a certain probability, i.e., $\prob{\logtrace}{\mathcal{L}}=1$. 
+%Given a log trace $\logtrace$ coming from a log file $\mathcal{L}$, we always associate to it a certain probability, i.e., $\prob{\logtrace}{\mathcal{L}}=1$.
 
 
 
@@ -100,21 +100,21 @@ Thanks to this final remark, we get that the problem of probabilistic trace alig
 %Given an \uswn $\net$, we use dot notation to extract its constitutive components (e.g., $\net.P$ denotes its places). \emph{The same dot notation will be used for the other structures introduced in the paper}. We also use $\net.in$ and $\net.out$ to respectively denote the input and output place of $\net$.
 %The current state of execution is captured by a marking, i.e., a multiset of places $P$ indicating how many tokens populate each place.
 %As pointed out above, \emph{we always assume, as customary in BPM, that the input \uswn is \underline{bounded}}, that is, in every state the number of tokens associated to each place cannot exceed a maximum, fixed threshold.
-%The notions of transition enablement and firing are also the standard ones  \cite{MarsanCB84}, as well as the ones for \textit{firing probability} \cite{spdwe}. %: %, which provides the basis for capturing the stochastic behavior of the net. 
+%The notions of transition enablement and firing are also the standard ones  \cite{MarsanCB84}, as well as the ones for \textit{firing probability} \cite{spdwe}. %: %, which provides the basis for capturing the stochastic behavior of the net.
 %We use the following notation: given a marking $\marking$ over \uswn $\net$,  $\enaset{\marking}{\net}$ is the set of enabled transitions in $\marking$; given transition $t \in \enaset{\marking}{\net}$, we write $\fire{\marking}{t}{\marking'}{\net}$ to capture the fact that, with, firing $t$ in $\marking$ results in the new marking $\marking'$. A \emph{firing sequence starting from marking $\marking_0$} is a sequence $t_1\cdots t_n$ of transitions from $\net.T$ so that, for every $i \in \set{1,\ldots,n}$, we have that $\fire{\marking_{i-1}}{t_i}{\marking_{i}}{\net}$. We say that the firing sequence results in $\marking_{n}$.
 %
-%given a marking $\marking$ %of $N$ 
-%and an enabled transition $t \in T_e$, the \emph{firing probability} of $t$ in $\marking$ is $\probt{t}{\marking}{\net} = \frac{W(t)}{\sum_{t'\in T_e}W(t')}$. %As required, 
+%given a marking $\marking$ %of $N$
+%and an enabled transition $t \in T_e$, the \emph{firing probability} of $t$ in $\marking$ is $\probt{t}{\marking}{\net} = \frac{W(t)}{\sum_{t'\in T_e}W(t')}$. %As required,
 
 
 %A \emph{valid sequence} $\seq = t_1\cdots t_n$ is a firing sequence starting from $m_{in}$ and resulting in $m_{out}$. The probability $\prob{\seq}{\net}$ of a valid sequence is the product of the probabilities associated to each transition. %: $\prob{\seq}{\net} = \prod_{i \in \set{1,\ldots,n}}\prob{t_i}{\marking_{i-1},\net}$. % A sequence of labels $\run = \alpha_1 \cdots \alpha_n$ from $\alphabet$ is a \emph{run} if there exists a valid underlying sequence $\seq = t_1\cdots t_n$  having $\alpha_i$ as a label for each $t_i\in \seq$. Run $\run$ may have different underlying valid sequences in $\seqs{\run}{\net}$.
 
-%underlying run $\run$ corresponding to $\trace$ once all $\tau$ are removed. 
+%underlying run $\run$ corresponding to $\trace$ once all $\tau$ are removed.
 
 \subsection{Graph and String Kernels}\label{subsec:katk}
  As a foundational basis to compute trace alignments, we adapt similarity measures from the database literature.  Given a set of data examples $\mathcal{X}$, (e.g., strings or traces, transition graphs) a (positive definite) \emph{kernel} function $k\colon \mathcal{X}\times \mathcal{X}\to \mathbb{R}$ denotes the similarity of elements in $\mathcal{X}$. If $\mathcal{X}$ is the $d$-dimensional Euclidean Space $\mathbb{R}^d$, the simplest kernel function is the inner product $\Braket{\mathbf{x},\mathbf{x}'}=\sum_{1\leq i\leq d}\mathbf{x}_i\mathbf{x}'_i$.
 A kernel is said to \emph{perform ideally} \cite{Gartner03} when $k(x,x')=1$ whenever $x$ and $x'$ are the same object (\textit{strong equality}) and $k(x,x')=0$ whenever $x$ and $x'$ are distinct objects (\textit{strong dissimilarity}). A kernel is also said to be \emph{appropriate} when similar elements $x,x'\in\mathcal{X}$ are also close in the feature space. Notice that appropriateness can be only assessed  empirically \cite{Gartner03}.
-A positive definite kernel induces a distance metric as 
+A positive definite kernel induces a distance metric as
 $
 d_k(\mathbf{x},\mathbf{x}'):=\sqrt{k(\mathbf{x},\mathbf{x})-2k(\mathbf{x},\mathbf{x}')+k(\mathbf{x}',\mathbf{x}')}
 $.
@@ -128,7 +128,7 @@ When $\mathcal{X}$ does not represent directly a $d$-dimensional Euclidean space
 
 
 \begin{table*}[t!]
-	\vspace{+0.7cm}
+	\vspace{+0.5cm}
 	\caption{Embedding of traces $\const{caba}$, $\const{caa}$ and $\const{cb}$.}\label{tb:embedding}
 	\vspace{-0.4cm}
 	\begin{center}
@@ -178,12 +178,12 @@ When $\mathcal{X}$ does not represent directly a $d$-dimensional Euclidean space
 \end{example}
 
 Nevertheless, such string embedding has several shortcomings: \begin{alphalist}
-	\item it is not weakly-ideal, so we cannot numerically assess if two embeddings represent equivalent traces 
+	\item it is not weakly-ideal, so we cannot numerically assess if two embeddings represent equivalent traces
 	(Example \ref{ex:wheredotiszero});
 	\item it does not characterize $\tau$-moves, so the probabilities of the initial and final $\tau$-moves are not preserved; and
-	\item it is affected by numerical errors from finite arithmetic: longer traces $\nonlogtrace$ generated from skewed probability 
+	\item it is affected by numerical errors from finite arithmetic: longer traces $\nonlogtrace$ generated from skewed probability
 	distributions %$G.\Lambda^i$
-	yield greater truncation errors, as smaller $\lambda^i$ components for bigger 
+	yield greater truncation errors, as smaller $\lambda^i$ components for bigger
 	$i<|\nonlogtrace|$ are ignored, preventing a complete numerical vector characterization of  $\nonlogtrace$ in practice.
 \end{alphalist}
 
