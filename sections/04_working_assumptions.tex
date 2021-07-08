@@ -3,17 +3,11 @@ We assume that the model against which we want to align the log traces is fixed 
 
 This section shows that, starting from common assumptions from the BPM community, we are able to transform reachability graphs into a node-labeled Markovian Process, where  $R$ is the associated transition matrix and $L$ is the node-labeling matrix. In fact, such matrices can determine the probability of reaching a node labeled $\beta\in\Sigma$ from any node labelled $\alpha\in\Sigma$ in $n$ steps as in string kernels:   $[\Lambda^n]_{\alpha\beta}:=[LR^nL^\top]_{\alpha\beta}/[LL^\top]_{\alpha\alpha}$ (see \cite{GartnerFW03} and Example \ref{ex:wheredotiszero}). 
 %
-Our working assumptions are the following: \begin{mylist}
-\item without any loss of generality for concurrent processes, we are interested in 1-bounded SPN, thus allowing an easy conversion from BPMN with no swim-lanes into 1-bounded SPN \cite{RaedtsPUWGS07}.
-\item As customary in trace alignment literature \cite{DBLP:conf/edoc/AdriansyahDA11,LeoniM17}, two traces are equivalent iff. they are identical after stripping $\tau$ events.
-\item As we exploit SPN for generating the traces describing the business process via unfolding, we could discard SPNs containing either whole paths or cycles entirely characterized by silent $\tau$ transitions, as it is always possible to generate SPNs without those and containing the same set of traces \cite{Bergami21}.
-\item Consequently, we could further restrict our analysis to SPNs containing silent transitions representing either skip-able sequences of non-silent transition, or the possibility of choosing different sequences of non-silent transitions \cite{Bergami21}.
-\end{mylist} We refer to a SPN satisfying such constraints as \textsc{Stochastic Workflow Nets} (SWN). 
 
-As a first result, the set of all the traces generated from the unfolding of SWN partition the sample space. This is the result of the two following considerations: \begin{mylist} 
-\item Given the requirements over the initial and final markings, we will generate a reachability graph $(\mathcal{M},\mathcal{E})$ where the initial (final) marking has no ingoing (outgoing) edges;
-\item also, by definition of the transition probability, the sum of the transition probabilities from a marking $M$ towards the adjacent $M'$ always adds up to $1$.
-\end{mylist}
+%As a first result, the set of all the traces generated from the unfolding of SWN partition the sample space. This is the result of the two following considerations: \begin{mylist} 
+%\item Given the requirements over the initial and final markings, we will generate a reachability graph $(\mathcal{M},\mathcal{E})$ where the initial (final) marking has no ingoing (outgoing) edges;
+%\item also, by definition of the transition probability, the sum of the transition probabilities from a marking $M$ towards the adjacent $M'$ always adds up to $1$.
+%\end{mylist}
 
 Finally, we can intuitively prove the goal asserted at the beginning of the current section: first, we need to shift labels from edges to nodes, and then we perform $\tau$-closures while preserving (if required) $\tau$-transitions for both start and final nodes; such operations preserve the traces' probabilities \cite{Bergami21}. Next, the transition probabilities are going to be stored in a matrix $R$ representing a stochastic process, while for each node $i$ there is only one label $\alpha$ such that $[L]_{i\alpha}=1$, and $[L]_{i\beta}=0$ if $\alpha\neq\beta$. Therefore, runs for Markovian Processes are then defined as for SWNs, and we employ the same notation to indicate the valid sequences underlying a model trace. The computation of probabilities for traces is hence defined equivalently. We denote these pair of matrices as \textsc{Transition Graph} $TG=(L,R)$.
 
