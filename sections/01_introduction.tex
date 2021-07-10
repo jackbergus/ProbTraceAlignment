@@ -13,11 +13,11 @@ As these strategies are not based on trace alignments, these cannot be directly 
 %
 In this paper, we provide for the first time an approach for the probabilistic alignment of a trace and a stochastic reference
 model. This approach is not comparable with the existing literature on probabilistic conformance checking as its output is not numeric but consists of a ranked list of alignments.
-Providing different alignment options is useful since, conceptually, probabilistic trace alignment requires the analyst to 
+Providing different alignment options is useful since, conceptually, probabilistic trace alignment requires the analyst to
 %handle the two possibly contrasting forces of the cost of the alignment on the one hand and the likelihood of the model trace with respect to which the alignment is computed.
 %We consider the important tradeoff between both
 %aspects.
-balance between the likelihood of the model trace with respect to which the alignment is computed and the cost of the alignment. 
+balance between the likelihood of the model trace with respect to which the alignment is computed and the cost of the alignment.
 %(if the cost of the alignment is too high even if the model trace is very likely applying too many changes in the original trace is in turn not very likely).
 
 \begin{figure}[!t]
@@ -26,7 +26,7 @@ balance between the likelihood of the model trace with respect to which the alig
 	\caption{a simple Stochastic Workflow Net.}\label{fig:petri_tut}
 	%\vspace{-1.4cm}
 \end{figure}
-%For example, the probabilistic alignment of a trace with a stochastic net could be represented by the model trace maximizing the combined provision of minimum trace alignment cost and maximum model trace probability. 
+%For example, the probabilistic alignment of a trace with a stochastic net could be represented by the model trace maximizing the combined provision of minimum trace alignment cost and maximum model trace probability.
 With reference to Figure~\ref{fig:petri_tut}, a user might be interested to align the log trace $\langle \textsf{close order},\,\textsf{archive order}\rangle$ with one of the two possible model traces $\langle\textsf{close order},$ $\textsf{accept order},\,\textsf{pay order},\,\textsf{archive order}\rangle$ or $\langle$\textsf{close order}, \textsf{refuse order}, \textsf{archive order}$\rangle$. While the latter trace provides the least alignment cost though the model trace has a low probability ($0.1$), the former gives a slightly greater alignment cost while providing a higher model trace probability ($0.9$). Since, depending on the context, analysts might prefer either the former or the latter alignment, providing a selection of the best $k$ alignments among all the distinct model traces empowers the analysts to find their own trade-off between alignment cost and model trace probability.
 %However, in some cases, the user could prefer to identify an alignment with a lower cost even if based on a less probable model trace, while, in other cases, the user could favor a model trace with a higher probability at the expense of a higher alignment cost. Therefore, to provide users with an instrument that allows them to find their own trade-off between alignment cost and model trace probability, we need to return the best $k$ alignments among all the distinct model traces.
 
@@ -37,15 +37,15 @@ With reference to Figure~\ref{fig:petri_tut}, a user might be interested to alig
 To do this, we frame the probabilistic trace alignment problem into the well-known $k$-Nearest Neighbors ($k$NN) problem \cite{Altman} that refers to finding the $k$ nearest data points to a \textit{query}  from a set  of \textit{data points} via a distance function.
 We introduce two ranking strategies. The first one is based on a brute force approach that reuses existing trace aligners such as \cite{DBLP:conf/edoc/AdriansyahDA11,LeoniM17}, where the (optimal) ranking of the top-k alignments is obtained by computing the Levensthein distance between the trace to be aligned and all the model traces and by multiplying each of these distances by the probability of the corresponding model trace. However, even if this approach returns the best trace alignment ranking for a query trace, the alignments must be computed a-new for all the possible traces to be aligned. For models generating a large number of model traces, this would clearly become unfeasible. Therefore, we propose a second strategy that produces an approximate ranking where traces are represented as numerical vectors via an embedding. {Then, by exploiting ad-hoc data structures,
 	%such as Vp-Trees \cite{Fu2000}, Kd-Trees \cite{Maneewongvatana99}, and M-Trees \cite{Ciaccia},
-	we can retrieve the neighborhood of size $k$ containing the traces similar to the given query  by pre-ordering (\textit{indexing}) the model traces  via the aformentioned distance. 
-	%Thus, we do not need to analyze the entire space, but just start the search from the top-$1$ alignment. 
+	we can retrieve the neighborhood of size $k$ containing the traces similar to the given query  by pre-ordering (\textit{indexing}) the model traces  via the aformentioned distance.
+	%Thus, we do not need to analyze the entire space, but just start the search from the top-$1$ alignment.
 	If the embeddings for our model traces are independent of the query of choice, this would not require to constantly recompute the numeric vector representation for the model traces.
 	%	
 	
 	%%%%% Proposed part as the last part of the introduction:
 	%\texttt{\color{red}[TODO]}
 	%\todo{this is too specific for an introduction; in particular, too many details on how the experiments are done.}
-	We implemented both strategies and perform experiments using a real life event log coming from a hospital system to empirically evaluate the properties of our proposed  strategy. We assessed our proposed as follows:
+	We implemented both strategies and perform experiments using a real life event log coming from a hospital system to empirically evaluate the properties of our proposed strategies. We assessed the two strategies as follows:
 \begin{mylist}
 	\item first, we evaluate the degree of approximation introduced by the approximate-ranking approach if compared with the optimal-ranking. We observe that different embedding strategies provide a trade-off between ranking stability vs. precision (\S\ref{subsec:apprp}).
 	\item Last, we evaluate the computational time required to both generate the embeddings and to assess the similarity between the embeddings. We observe that approximate-ranking alignments provide the best trade-off between accuracy and efficiency (\S\ref{subsec:efficio}).
@@ -70,4 +70,4 @@ We introduce two ranking strategies. The first one is based on a brute force app
 		\caption{Transition graph $TG$ resulting from $N$ after $\tau$-closure.}\label{fig:closed}
 	\end{minipage}
 	\vspace{-.6cm}
-\end{figure*}
+\end{figure*} 
