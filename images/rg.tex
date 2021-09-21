@@ -1,0 +1,94 @@
+\newcommand{\prob}{\rho}
+
+\documentclass[tikz]{standalone}
+\usepackage{comment}
+\usetikzlibrary{arrows,shapes,automata,petri,positioning,calc}
+\usepackage{xcolor}
+\input{tikz-macros}
+
+
+
+
+
+\begin{document}
+
+\begin{tikzpicture}[node distance=0.5cm and 1.8cm,>=stealth',bend angle=45,auto]
+	
+\node[state] (i) {$p_1$};
+\node[state] (ii) [below=of i] {$p_2$};
+\node[state] (iii) [right=of ii] {$p_3$};
+\node[state] (iv) [left=of ii] {$p_4$};
+\node[state] (v) [below=of iii] {$p_5$};
+\node[state] (vi) [below=of iv] {$p_6$};
+\node[below=of ii] (dot) {};
+\node[state] (vii) [below=of dot] {$p_7$};
+
+\draw[link] 
+  (i) 
+  -- 
+  node[right]{\pcolor $1$} 
+  node[left]{\tcolor $\tau$}
+  (ii);
+
+\draw[link] 
+  (ii) 
+  -- 
+  node[above,font=\scriptsize]{\pcolor $\prob_{23} = \frac{v_{\tau_2}}{v_{\tau_2}+v_c}$} 
+  node[below]{\tcolor $\tau$}
+  (iii);
+
+\draw[link] 
+  (ii) 
+  -- 
+  node[above,font=\scriptsize]{\pcolor $\prob_{24} = \frac{v_c}{v_{\tau_2}+v_c}$} 
+  node[below]{\tcolor $c$}
+  (iv);
+\draw[link] 
+  (iii) 
+  -- 
+  node[right]{\pcolor $1$} 
+  node[left]{\tcolor $a$}
+  (v);
+
+\draw[link] 
+  (iv) 
+  -- 
+  node[right]{\pcolor $1$} 
+  node[left]{\tcolor $\tau$}
+  (vi);
+
+
+\draw[link,rounded corners=4pt,] 
+  (v) 
+  |-
+  node[above left,font=\scriptsize]{\pcolor $\prob_{57} = \frac{v_{\tau_3}}{v_{a_2}+v_{\tau_3}}$} 
+  node[below left,xshift=-10mm]{\tcolor $\tau$}
+  (vii);
+
+\draw[link,rounded corners=4pt] 
+  ($(v.south)+(2mm,0)$) 
+  |-
+  ($(v.south east)+(4mm,-5mm)$)  
+  node[below,font=\scriptsize,yshift=1mm,xshift=-3mm]{\pcolor $\prob_{55} = \frac{v_{a_2}}{v_{a_2}+v_{\tau_3}}$} 
+  node[above left,xshift=-1.5mm]{\tcolor $a$}
+  |-
+  (v.east);
+
+
+\draw[link] 
+  (vi) 
+  -- 
+  node[above,font=\scriptsize]{\pcolor $\prob_{65} = \frac{v_{a_3}}{v_{a_3}+v_b}$} 
+  node[below]{\tcolor $a$}
+  (v);
+
+\draw[link,rounded corners=4pt,] 
+  (vi) 
+  |-
+  node[above right,font=\scriptsize]{\pcolor $\prob_{67} = \frac{v_{b}}{v_{a_3}+v_b}$} 
+  node[below right,xshift=10mm]{\tcolor $b$}
+  (vii);
+
+\end{tikzpicture}
+	
+\end{document}
