@@ -16,22 +16,23 @@
       transitionV,
       right=7mm of i,
       label=below:$\tcolor\textsf{close order}$,
-      label=above:$\wcolor 1.0$,
+      label={[right,yshift=-1mm]$\wcolor 1.0$},
     ] (t1) {};
 	\node [
       place,
       right=7mm of t1
     ] (p2){};
     \node [
-      below=-0.5mm of p2
+      right=-0.5mm of p2
     ] {$p_2$};
 	\node  (b1) [right=of p2] {};
 	\node  (b2) [right=of b1] {};
 	\node [
       transitionV,
-      above right=of p2,
+      right=of p2,
+      yshift=6mm,
       label=below:$\tcolor\textsf{accept order}$,
-      label=above:$\wcolor 0.9$,
+      label={[right,yshift=-1mm]$\wcolor 0.9$},
     ] (te1) {};
 	\node [
       place, 
@@ -44,7 +45,7 @@
       transitionV,
       right=8mm of p3,
       label=below:$\tcolor \textsf{pay order}$,
-      label=above:$\wcolor 1.0$,
+      label={[right,yshift=-1mm]$\wcolor 1.0$},
     ] (ta1) {};
 %	\node [
 %      place,
@@ -57,9 +58,10 @@
 
 	\node [
       transitionV,
-      below right=of p2,
+      right=of p2,
+      yshift=-6mm,
       label=below:$\tcolor \textsf{refuse order}$,
-      label=above:$\color{magenta} 0.1$
+      label={[right,yshift=-1mm]$\color{magenta} 0.1$}
     ] (tc1) {};
 %	\node [
 %      place,
@@ -86,12 +88,12 @@
 	\node  (b4) [right=of b3] {};
 	\node  (b5) [right=of b4] {};
 	\node [place] (f) [right=-6mm of b4] {};
-    \node [below=-0.5mm of f] {$p_4$};
+    \node [left=-0.5mm of f] {$p_4$};
     	\node [
     transitionV,
     right=1cm of f,
     label=below:$\tcolor\textsf{archive order}$,
-    label=above:$\wcolor 1.0$,
+    label={[right,yshift=-1mm]$\wcolor 1.0$},
     ] (tf1) {};
     \node [place] (ff) [right=9mm of tf1] {};
     \node [below=-0.5mm of ff] {$p_5$};
@@ -107,14 +109,14 @@
 %    
     \draw[arc] (i) -- (t1);
     \draw[arc] (t1) -- (p2);
-    \draw[arc] (p2) -- (te1);
+    \draw[arc,rounded corners=5pt] (p2) |- (te1);
     \draw[arc] (te1) -- (p3);
     \draw[arc] (p3) -- (ta1);
 %    \draw[arc] (ta1) -- (p5);
     %\draw[arc] (p5) -- (te2);
-     \draw[arc] (p2) -- (tc1);
-    \draw[arc] (tc1) -- (f);
-    \draw[arc] (ta1) -- (f);
+     \draw[arc,rounded corners=5pt] (p2) |- (tc1);
+    \draw[arc,rounded corners=5pt] (tc1) -| (f);
+    \draw[arc,rounded corners=5pt] (ta1) -| (f);
 
 %   
 %    \draw[arc] (tc1) -- (p4);
